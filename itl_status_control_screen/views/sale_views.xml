@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+
+        <record id="itl_sale_status_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree string="Sales">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="name" string="SO No." readonly="1"/>
+                    <field name="partner_id" readonly="1" />
+                    <field name="itl_total_quantity" string="Quantity" readonly="1" />
+                    <field name="amount_total" sum="Amount" widget="monetary" optional="show"/>
+                    <field name="effective_date" string="Delivery date" readonly="1" />
+                    <field name="user_id" string="Creator" optional="show"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="itl_approval_date" string="Approval Date"/>
+                    <field name="itl_delivery_create_date" string="Delivery Created Date"/>
+                    <field name="itl_delivery_by" string="Delivery by"/>
+                    <field name="itl_shipping_date" string="Delivery Shipping Date"/>
+                    <field name="itl_effective_delivery_date" string="Customer Receiving Date"/>
+                    <field name="itl_proof_deliver_date" string="Proof of delivery upload date"/>
+                    <field name="itl_customer_payment_status" string="Payment Status"/>
+                    <field name="itl_customer_payment_date" string="Payment Date"/>
+                    <field name="itl_overdue_days" string="Overdue Days"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="itl_sale_status_tree_action" model="ir.actions.act_window">
+            <field name="name">Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="itl_sale_status_tree"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a request for quotation
+              </p><p>
+                The quotation contains the history of the discussion
+                you had with your vendor.
+              </p>
+            </field>
+        </record>
+      
+    </data>
+</odoo>

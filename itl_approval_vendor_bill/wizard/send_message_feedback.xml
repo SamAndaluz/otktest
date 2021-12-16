@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>	
+
+        <record id="send_message_feedback_form_payment" model="ir.ui.view">
+            <field name="name">send.message.feedback form</field>
+            <field name="model">send.message.feedback.payment</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Send message" class="btn-primary" type="object" name="send_message"/>
+                    </footer>
+                </form>
+            </field>	
+        </record>
+
+    </data>
+</odoo>

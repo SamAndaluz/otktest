@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr_expense']" position="inside">
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="itl_expense_approval"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="itl_expense_approval" string="Expense Approval"/>
+                            <div class="text-muted">
+                                Enable new Expense Approval flow using Approvals module
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Approval category</span>
+                            <div class="text-muted">
+                                Approval category to create when send expense
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="itl_expense_approval_category_id" class="col-lg-3 o_light_label"/>
+                                    <field name="itl_expense_approval_category_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Cuenta de Anticipos de empleados</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!--<label for="itl_account_anticipo_id" class="col-lg-3 o_light_label"/>-->
+                                    <field name="itl_account_anticipo_id" class="col-lg-12 o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Cuenta de Cuentas por pagar</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!--<label for="itl_account_cuentas_pagar_id" class="col-lg-3 o_light_label"/>-->
+                                    <field name="itl_account_cuentas_pagar_id" class="col-lg-12 o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Cuenta de IVA pendiente de pago</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!--<label for="itl_account_iva_pend_id" class="col-lg-3 o_light_label"/>-->
+                                    <field name="itl_account_iva_pend_id" class="col-lg-12 o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Cuenta de IVA acreditable pagado</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!--<label for="itl_expense_approval_category_id" class="col-lg-3 o_light_label"/>-->
+                                    <field name="itl_account_iva_pag_id" class="col-lg-12 o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_expense_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Journal for Expenses compensation</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <!--<label for="itl_expense_approval_category_id" class="col-lg-3 o_light_label"/>-->
+                                    <field name="itl_special_expense_journal_id" class="col-lg-12 o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

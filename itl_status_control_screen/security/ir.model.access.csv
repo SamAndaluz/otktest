@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_itl_status_control_screen_itl_status_control_screen,itl_status_control_screen.itl_status_control_screen,model_itl_status_control_screen_itl_status_control_screen,base.group_user,1,1,1,1

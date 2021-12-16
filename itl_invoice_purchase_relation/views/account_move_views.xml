@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        
+        <record id="view_account_move_form_custom" model="ir.ui.view">
+            <field name="name">account.move.custom.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_origin" position="after">
+                    <field name="itl_purchase_related"/>
+                </field>
+            </field>
+        </record>
+      
+        <record id="get_invoice_detail_action_server" model="ir.actions.server">
+            <field name="name">Get invoice details</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="groups_id" eval="[(4, ref('base.group_no_one'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.get_invoice_details()
+            </field>
+        </record>
+        
+    </data>
+</odoo>

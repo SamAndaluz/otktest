@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        
+        <record id="view_account_move_form_custom" model="ir.ui.view">
+            <field name="name">account.move.custom.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="ref" position="after">
+                    <br/>
+                    <!--<field name="has_changes" invisible="1"/>-->
+                    <field name="received_products" readonly="1" attrs="{'invisible': [('type','!=','in_invoice')]}" groups="base.group_no_one"/>
+                    <field name="approval_request_vendor_bill_id" readonly="1" attrs="{'invisible': [('approval_request_vendor_bill_id','=',False)]}"/>
+                    <field name="approval_vendor_bill_status" readonly="1" attrs="{'invisible': [('approval_request_vendor_bill_id','=',False)]}"/>
+                </field>
+                <xpath expr="//button[@name='action_post']" position="after">
+                    <button name="action_post_itl_approval_vendor_bill" string="Post" class="oe_highlight"
+                                type="object"
+                                attrs="{'invisible': ['|',('state', '!=', 'draft'),('approval_vendor_bill_status','!=','approved')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_invoice_register_payment']" position="replace">
+                    <button name="action_invoice_register_payment" id="account_invoice_payment_btn" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|', '|', '|','|',('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),('received_products','=',False),'&amp;',('approval_vendor_bill_status','!=',False),('approval_vendor_bill_status','!=','approved')]}"
+                            string="Register Payment" groups="account.group_account_invoice"/>
+                </xpath>
+                <sheet position="before">
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|',('approval_vendor_bill_status','not in',['pending','refused','cancel']),('type','!=','in_invoice')]}">
+                        <p><strong>Esta factura no se puede pagar porque la solicitud aún no ha sido aprobada, o fue rechazada o cancelada.</strong></p>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|',('approval_vendor_bill_status','!=','approved'),('type','!=','in_invoice')]}">
+                        <p><strong>Solicitud aprobada, esta factura está liberada para pago.</strong></p>
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|','|',('received_products','!=',False),('type','!=','in_invoice'),('invoice_payment_state','=','paid')]}">
+                        <p><strong>Esta factura no se puede pagar porque no se ha recibido el Consumible o el Servicio de la PO relacionada.</strong></p>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|','|',('received_products','=',False),('type','!=','in_invoice'),('invoice_payment_state','=','paid')]}">
+                        <p><strong>Los productos fueron recibidos, esta factura está liberada para pago.</strong></p>
+                    </div>
+                </sheet>
+            </field>
+        </record>
+      
+    </data>
+</odoo>

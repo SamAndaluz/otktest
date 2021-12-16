@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        
+        <record id="itl_change_warehouse_form" model="ir.ui.view">
+            <field name="name">itl.change.warehouse.form</field>
+            <field name="model">itl.change.warehouse</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="itl_warehouse_id" required="1"/>
+                                <field name="itl_picking_type_id" force_save="1" readonly="1" groups="base.group_no_one"/>
+                                <field name="itl_location_id" force_save="1" readonly="1" groups="base.group_no_one"/>
+                                <field name="itl_location_dest_id" force_save="1" readonly="1" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_confirm" type="object" string="Confirm" class="btn btn-primary"/>
+                        <button name="cancel" string="CANCEL" special="cancel" class="oe_link"/> 
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

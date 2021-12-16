@@ -1,0 +1,28 @@
+<odoo>
+    
+    <record id="approval_category_view_form_inherit" model="ir.ui.view">
+        <field name="name">approval.category.view.form.inherit</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+            <field name="description" position="before">
+                <field name="code"/>
+            </field>
+            <field name="is_manager_approver" position="after">
+                <field name="approval_hierarchy"/>
+            </field>
+            <field name="user_ids" position="replace">
+                <field name="user_ids">
+                    <tree>
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </field>
+            <field name="approval_minimum" position="attributes">
+                <attribute name="attrs">{'invisible': [('approval_hierarchy','=',True)]}</attribute>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

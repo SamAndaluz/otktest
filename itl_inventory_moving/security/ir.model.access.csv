@@ -1,0 +1,23 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_logistic_company,access_logistic_company,model_logistic_company,base.group_user,1,1,1,1
+itl_access_stock_picking_user,stock.picking user,stock.model_stock_picking,itl_inventory_moving.itl_group_stock_user,1,1,0,0
+itl_access_stock_picking_type_user,stock.picking.type user,stock.model_stock_picking_type,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_production_lot_user,stock.production.lot user,stock.model_stock_production_lot,itl_inventory_moving.itl_group_stock_user,1,1,1,1
+itl_access_stock_move_user,stock.move user,stock.model_stock_move,itl_inventory_moving.itl_group_stock_user,1,1,1,0
+itl_access_stock_inventory_user,stock.inventory user,stock.model_stock_inventory,itl_inventory_moving.itl_group_stock_user,1,1,1,0
+itl_access_stock_inventory_line_user,stock.inventory.line user,stock.model_stock_inventory_line,itl_inventory_moving.itl_group_stock_user,1,1,1,0
+itl_access_product_product_stock_user,product_product_stock_user,product.model_product_product,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_product_template_stock_user,product.template stock user,product.model_product_template,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_warehouse_orderpoint,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_quant_user,stock.quant user,stock.model_stock_quant,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_quant_package_stock_user,stock.quant.package stock user,stock.model_stock_quant_package,itl_inventory_moving.itl_group_stock_user,1,1,1,1
+itl_access_stock_package_level_stock_user,stock.package_level stock user,stock.model_stock_package_level,itl_inventory_moving.itl_group_stock_user,1,1,1,1
+itl_access_stock_rule_user,stock_rule user,stock.model_stock_rule,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_move_line_user,stock.move.line user,stock.model_stock_move_line,itl_inventory_moving.itl_group_stock_user,1,1,1,1
+itl_access_barcode_nomenclature_stock_user,barcode.nomenclature.stock.user,barcodes.model_barcode_nomenclature,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_barcode_rule_stock_user,barcode.rule.stock.user,barcodes.model_barcode_rule,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_stock_scrap_user,stock.scrap.user,stock.model_stock_scrap,itl_inventory_moving.itl_group_stock_user,1,1,1,0
+itl_access_sale_order_stock_worker,sale.order stock worker,sale.model_sale_order,itl_inventory_moving.itl_group_stock_user,1,1,0,0
+itl_access_sale_order_line_stock_worker,sale.order.line stock worker,sale.model_sale_order_line,itl_inventory_moving.itl_group_stock_user,1,1,0,0
+itl_access_purchase_order_stock_worker,purchase.order,purchase.model_purchase_order,itl_inventory_moving.itl_group_stock_user,1,0,0,0
+itl_access_purchase_order_line_stock_worker,purchase.order.line,purchase.model_purchase_order_line,itl_inventory_moving.itl_group_stock_user,1,0,0,0

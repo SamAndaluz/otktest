@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        
+        <record id="itl_prepare_picking_form_delivery_list" model="ir.ui.view">
+            <field name="name">itl.prepare.picking.form.delivery.list</field>
+            <field name="model">itl.prepare.picking</field>
+            <field name="inherit_id" ref="itl_inventory_moving.itl_prepare_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="process_picking" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+                <xpath expr="//button[@special='cancel']" position="before">
+                    <button name="generate_delivery_list" string="Procesar y Generar Reporte" type="object" class="btn-primary"/> 
+                </xpath>
+            </field>
+        </record>
+    
+    </data>
+</odoo>

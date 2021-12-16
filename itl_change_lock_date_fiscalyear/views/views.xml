@@ -1,0 +1,9 @@
+<odoo>
+  <data>
+        
+      <record model="ir.ui.menu" id="account_accountant.menu_action_change_lock_date">
+          <field name="groups_id" eval="[(6,0,[ref('group_fiscalyear_lock_date')])]"/>
+        </record>
+          
+  </data>
+</odoo>

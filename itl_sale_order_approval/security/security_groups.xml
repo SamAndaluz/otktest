@@ -1,0 +1,15 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_approval_so" model="res.groups">
+            <field name="name">Approval Sale Order</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+        <record id="group_send_to_approve_so" model="res.groups">
+            <field name="name">Send to approve Sale Order</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+    </data>
+</odoo>

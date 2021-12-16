@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="paperformat_delivery_list_report" model="report.paperformat">
+        <field name="name">Delivery List</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_width">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">20</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_right">7</field>
+        <field name="margin_left">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">15</field>
+        <field name="dpi">90</field>
+    </record>
+    
+    <report
+        id="delivery_list_report"
+        model="itl.prepare.picking"
+        string="Delivery Report"
+        name="itl_delivery_list.delivery_list_template"
+        report_type="qweb-pdf"
+        paperformat="paperformat_delivery_list_report"
+    />
+    
+    <template id="delivery_list_template">
+        <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <!--<div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">-->
+            <div class="header">
+                <div class="row">
+                    <div class="col-3 mb4">
+                        <div class="d-flex flex-row align-items-center">
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 25px;" alt="Logo"/>
+                            <p t-field="company.name" style="font-size: 9px;"/>
+                        </div>
+                    </div>
+                    <div class="col-3 mb4">
+                        <p class="text-center">Reporte Diario de Entregas</p>
+                    </div>
+                    <div class="col-6 mb4" style="font-size: 11px;">
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <p>Vehículo:____________</p>
+                            </div>
+                            <div class="col-1">
+                                Nivel de Tanque (%)
+                            </div>
+                            <div class="col-3">
+                                <p>Inicial:________</p>
+                                <p>Final:_________</p>
+                            </div>
+                            <div class="col-4">
+                                <p>Kilometraje Inicial:_________</p>
+                                <p>Kilometraje Final:__________</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="article mt0 o_report_layout_standard">
+                <div class="row" style="font-size: 11px; margin-top: 5px;">
+                    <div class="col-3 mb4">
+                        <p>Repartidor:________________</p>
+                    </div>
+                    <div class="col-3 mb4">
+                        <p>Fecha:________________</p>
+                    </div>
+                    <div class="col-2 mb4">
+                        <p>Entrada(hr):____________</p>
+                    </div>
+                    <div class="col-2 mb4">
+                        <p>Inicio Ruta(hr):____________</p>
+                    </div>
+                    <div class="col-2 mb4">
+                        <p>Salida(hr):____________</p>
+                    </div>
+                </div>
+                
+                <table class="table table-sm table-bordered" style="font-size: 11px;" >
+                    <thead>
+                        <th style="width: 8%"># de Odoo</th>
+                        <th class="text-center" style="width: 2%; transform: rotate(270deg); -webkit-transform: rotate(270deg); vertical-align: middle;">Pendiente</th>
+                        <th class="text-center" style="width: 10%">Cliente</th>
+                        <th class="text-center" style="width: 8%">Lote</th>
+                        <th class="text-center" style="width: 8%">Cantidad</th>
+                        <th class="text-center" style="width: 8%">Factura (X)</th>
+                        <th class="text-center" style="width: 8%">Método de Pago</th>
+                        <th class="text-center" style="width: 8%">Monto (efectivo)</th>
+                        <th class="text-center" style="width: 8%">Efectivo Recibido (X)</th>
+                        <th class="text-center" style="width: 8%">Condición Especial Para la Entrega</th>
+                        <th class="text-center" style="width: 8%">Quién Recibió (Nombre)</th>
+                        <th class="text-center" style="width: 8%">Entregado</th>
+                    </thead>
+                    <tbody>
+                        
+                        <t t-foreach="docs.itl_stock_move_line_id" t-as="doc">
+                            <tr>
+                                <td><span t-esc="doc.origin"/></td>
+                                <td></td>
+                                <td><span t-esc="doc.picking_id.partner_id.name"/></td>
+                                <td><span t-esc="doc.lot_id.name"/></td>
+                                <td><span t-esc="doc.qty_done"/></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </t>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer o_standard_footer" style="font-size: 11px;">
+                <div class="row text-right">
+                    <div class="col col-3"></div>
+                    <div class="col col-3"></div>
+                    <div class="col col-3">
+                        <p>Total de Efectivo Recibido:____________________</p>
+                    </div>
+                    <div class="col col-3">
+                        <p>Total de Efectivo Depositado:____________________</p>
+                    </div>
+                </div>
+                <div class="row text-right">
+                    <div class="col col-3"></div>
+                    <div class="col col-3"></div>
+                    <div class="col col-3">
+                        <p>Total de Efectivo Entregado:____________________</p>
+                    </div>
+                    <div class="col col-3">
+                        <p>Efectivo Recibido por:____________________</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        
+        <t t-call="web.basic_layout">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <t t-if="not company">
+                <!-- Multicompany -->
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id"/>
+                </t>
+                <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                    <t t-set="company" t-value="o.company_id.sudo()"/>
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+            </t>
+            <div class="page">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-3 mb4">
+                            <div class="d-flex flex-row align-items-center">
+                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 25px;" alt="Logo"/>
+                                <p t-field="company.name" style="font-size: 9px;"/>
+                            </div>
+                        </div>
+                        <div class="col-9 mb4">
+                            <h5>Check List Diario para los vehículos de repartos</h5>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <th style="width: 15%"><h5>Categoría</h5></th>
+                            <th style="width: 35%"><h5>Criterio</h5></th>
+                            <th style="width: 50%"><h5>Tachar si todo está bien, de lo contrario, poner los comentarios</h5></th>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"><strong>Apariencia</strong></td>
+                            <td><strong>Exterior</strong> :<br/>
+                                Todo alrededor del vehículo se encuentre sin daños alguno (de lo contrario, anotar los detalles de lo que se observa)<br/><br/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interior</strong> :<br/>
+                                Todo adentro del vehículo se encuentre sin daños alguno (de lo contrario, anotar los detalles de lo que se observa)<br/><br/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="4"><strong>Herramientas</strong></td>
+                            <td>Llave cruz / paranca para las tuercas de la llanta</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Gato hidráulico<br/><br/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Triángulo rojo para emergencias (o generador de humo)<br/><br/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Llanta de repuesto<br/><br/></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Arranque</strong></td>
+                            <td>(En caso de la unidad <strong>con el motor DIESEL</strong>)Abrir switch y esperar a prender el motor hasta que suena el calentamiento del motor</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apague</strong></td>
+                            <td>(En caso de la unidad <strong>con el motor DIESEL</strong>)Apagar el motor después de dejarlo prendido un rato para que siente el motor</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Otros</strong></td>
+                            <td>Otros detalles que se encuentra en el vehículo /Incidentes que pasó en el día al vehículo<br/><br/></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <template id="itl_external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+
+    </template>
+    
+    <template id="itl_external_layout_standard">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            <div class="row">
+                <div class="col-3 mb4">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+                </div>
+                <div class="col-3 mb4">
+                    <h3 class="text-center">Reporte Diario de Entregas</h3>
+                </div>
+                <div class="col-6 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>
+            </div>
+            <div t-if="company.logo or company.report_header" class="row zero_min_height">
+                <div class="col-12">
+                    <div style="border-bottom: 1px solid black;"/>
+                </div>
+            </div>
+        </div>
+
+        
+    </template>
+    
+</odoo>

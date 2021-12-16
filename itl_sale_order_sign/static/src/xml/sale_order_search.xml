@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="so_search_template">
+        <div class="o_so_search_main_menu_container o_home_menu_background">
+            <div class="o_so_search_main_menu position-relative">
+                <a href="#" class="o_so_search_menu d-block float-left"><i class="fa fa-chevron-left"></i></a>
+                <h1 class="mb-4">Buscar Orden de Venta</h1>
+
+                <p class="text-center mb-sm-5 pl-4">
+                    <span>Indique el número de orden de venta a buscar.</span>
+                </p>
+
+                <input type="text" class="o_field_char o_field_widget o_input o_required_modifier oe_sale_order_input" name="sale_order_input" placeholder="e.g. SO0123"></input>
+                
+                <hr class="mb-4 d-none d-sm-block"/>
+
+                <div class="row">
+                    <div class="col">
+                        <button class="button_so_search btn btn-block btn-primary mb-4 mb-sm-0">Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

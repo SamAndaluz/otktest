@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        
+        <record id="view_sale_order_form_custom2" model="ir.ui.view">
+            <field name="name">sale.order.custom.form.2</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_order_type.sot_view_order_form"/>
+            <field name="arch" type="xml">
+                
+                <field name="type_id" position="before">
+                    <field name="itl_can_change_type" insible="1"/>
+                </field>
+                
+                <field name="type_id" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state','in',('done','sale','approved','refused','to_approve')),('itl_can_change_type','=',False)]}</attribute>
+                </field>
+            </field>
+        </record>
+      
+    </data>
+</odoo>

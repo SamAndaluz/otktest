@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+        
+        <record id="view_sale_order_form_custom" model="ir.ui.view">
+            <field name="name">sale.order.custom.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_shipping_id" position="after">
+                    <field name="itl_so_approval" invisible="1"/>
+                    <br/>
+                    <field name="approval_request_id" attrs="{'invisible': ['|',('approval_request_id','=',False),'|',('state', 'in', ['draft']),('itl_so_approval','=',False)]}" readonly="1"/>
+                    <field name="approval_status" attrs="{'invisible': ['|',('approval_request_id','=',False),'|',('state', 'in', ['draft']),('itl_so_approval','=',False)]}"/>
+                </field>
+                <!--<xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>-->
+                <xpath expr="//button[@id='action_confirm'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('itl_so_approval','=',True),('state', 'not in', ['sent'])]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm'][2]" position="replace">
+                    <!--<button name="action_confirm" string="Confirm" type="object" class="btn-primary" 
+                            attrs="{'invisible': ['|',('state', 'not in', ['draft','approved']),'&amp;',('has_changes','=',True),('approval_status','!=','approved')]}"/>-->
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" 
+                            attrs="{'invisible': ['|',('state', 'not in', ['draft','approved']),'&amp;',('itl_so_approval','=',True) ,('approval_status','!=','approved')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm']" position="after">
+                    <button name="send_to_approve"
+                        string="Send to approve" type="object" attrs="{'invisible': ['|',('state', 'not in', ['draft']),('itl_so_approval','=',False)]}"/>
+                </xpath>
+                <button name="action_draft" position="attributes">
+                    <attribute name="states">cancel,refused</attribute>
+                </button>
+
+                <field name="order_line" position="attributes">
+                    <attribute name="attrs">{'readonly': [('approval_status', 'in', ['pending', 'approved'])]}</attribute>
+                </field>
+
+                <button name="action_cancel" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('state', 'not in', ['draft','sent','sale','to_approve']),('id', '=', False)]}</attribute>
+                </button>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="after">
+                    <widget name="web_ribbon" 
+                            title="Approved"
+                            attrs="{'invisible': ['|',('approval_status', '!=', 'approved'),('itl_so_approval','=',False)]}"/>
+                    <widget name="web_ribbon" 
+                            title="Rejected"
+                            attrs="{'invisible': ['|',('approval_status', 'not in', ('refused')),('itl_so_approval','=',False)]}"
+                            bg_color="bg-danger" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_quick_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+    
+      
+    </data>
+</odoo>

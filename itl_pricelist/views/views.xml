@@ -1,0 +1,78 @@
+<odoo>
+    <data>
+        
+        <record id="itl_product_pricelist_item_form_view" model="ir.ui.view">
+            <field name="name">itl.product.pricelist.item.form</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <field name="fixed_price" position="before">
+                    <field name="itl_gross" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                    <field name="itl_discount" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                    <field name="itl_distribution_fee" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                    <field name="itl_other_discount" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                    <field name="itl_fixed_price" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                    <field name="itl_current_fixed_price" attrs="{'invisible': [('compute_price','!=','fixed_formula')]}"/>
+                </field>
+                <xpath expr="//group[@name='pricelist_rule_computation']" position="inside">
+                    <field name="itl_price_has_changes" invisible="1"/>
+                    <group>
+                        <button name="send_to_approve" string="Send to approve" type="object" attrs="{'invisible': [('itl_price_has_changes','=',False)]}"/>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet" position="inside">
+                    <notebook>
+                        <page name="approvals" string="Approvals">
+                            <group>
+                                <group>
+                                    <field name="approval_status" readonly="1"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="approval_ids" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="approval_request_view_form_inherit_pricelist" model="ir.ui.view">
+            <field name="name">approval.request.view.form.pricelist</field>
+            <field name="model">approval.request</field>
+            <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group[1]" position="after">
+                    <group attrs="{'invisible': [('category_code','!=','PRICELIST')]}">
+                        <group string="Pricelist info">
+                            <field name="category_code" readonly="1" invisible="1"/>
+                            <field name="pricelist_item_id" attrs="{'invisible': [('category_code','!=','PRICELIST')]}" readonly="1"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_sale_order_form_custom_pricelist" model="ir.ui.view">
+            <field name="name">sale.order.custom.form.pricelist</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <field name="itl_product_sale_ok" invisible="1"/>
+                    <field name="itl_product_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('itl_product_sale_ok','=',True),('itl_product_type','=','product'),'|',('qty_invoiced', '&gt;', 0)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

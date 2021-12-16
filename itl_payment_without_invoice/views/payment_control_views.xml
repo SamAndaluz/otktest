@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        
+        <record id="itl_payment_control_view_form" model="ir.ui.view">
+            <field name="name">itl.payment.control.form</field>
+            <field name="model">itl.payment.control</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="itl_document_type"/>
+                            <field name="itl_pediment"/>
+                            <field name="itl_foreing_invoice"/>
+                            <field name="itl_purchase_id"/>
+                            <field name="itl_advance_bill_id"/>
+                            <field name="itl_bill_id"/>
+                            <field name="itl_is_done"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="itl_payment_control_view_tree" model="ir.ui.view">
+            <field name="name">itl.payment.control.tree</field>
+            <field name="model">itl.payment.control</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="itl_document_type"/>
+                    <field name="itl_pediment"/>
+                    <field name="itl_foreing_invoice"/>
+                    <field name="itl_purchase_id"/>
+                    <field name="itl_advance_bill_id"/>
+                    <field name="itl_bill_id"/>
+                    <field name="itl_is_done"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="itl_payment_control_action" model="ir.actions.act_window">
+            <field name="name">Payment control</field>
+            <field name="res_model">itl.payment.control</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem name="Payment control" id="menu_payment_control" parent="purchase.menu_purchase_root" action="itl_payment_control_action" sequence="50" groups="base.group_system"/>
+    
+    </data>
+</odoo>

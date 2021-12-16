@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        
+        <record id="itl_view_picking_form" model="ir.ui.view">
+            <field name="name">itl.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="itl_create_journal_in_receipt" invisible="1"/>
+                    <field name="itl_hide_validate_button1" invisible="1"/>
+                    <field name="itl_hide_validate_button2" invisible="1"/>
+                    <field name="itl_journal_entry_id" readonly="1" force_save="1" attrs="{'invisible': [('itl_create_journal_in_receipt','=',False)]}"/>
+                    <field name="itl_reversal_journal_entry_id" readonly="1" force_save="1" attrs="{'invisible': [('itl_create_journal_in_receipt','=',False)]}"/>
+                </field>
+                <xpath expr="//form/header/button[@name='button_validate'][1]" position="before">
+                    <button name="create_journal_entry" type="object" class="oe_highlight" string="Póliza contable" attrs="{'invisible': ['|',('itl_journal_entry_id','!=',False),('itl_create_journal_in_receipt','=',False)]}"/>
+                    <button name="reverse_journal_entry" type="object" class="oe_highlight" string="Reversar póliza contable" attrs="{'invisible': ['|',('itl_journal_entry_id','=',False),'|',('itl_reversal_journal_entry_id','!=',False),('itl_create_journal_in_receipt','=',False)]}"/>
+                </xpath>
+                
+                <xpath expr="//form/header/button[@name='button_validate'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('itl_hide_validate_button1', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='button_validate'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('itl_hide_validate_button2', '=', True)]}</attribute>
+                </xpath>
+                
+            </field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_itl_preselect_warehouse,itl_preselect_warehouse,model_itl_users_warehouse,base.group_user,1,1,1,1
+access_itl_users_warehouse_condition,access_itl_users_warehouse_condition,model_itl_users_warehouse_condition,base.group_user,1,1,1,1

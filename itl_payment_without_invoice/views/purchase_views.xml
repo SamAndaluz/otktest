@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        
+        <record id="purchase_order_form_custom_2" model="ir.ui.view">
+            <field name="name">purchase.order.form.custom.2</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                
+                <xpath expr="//form/sheet/group[1]/group[2]" position="inside">
+                    <field name="hide_payment_request_button" invisible="1"/>
+                    <separator string="Payment w/o invoice" colspan="2" attrs="{'invisible': [('itl_payment_control_id','=',False)]}"/>
+                    <field name="itl_payment_control_id" invisible="1"/>
+                    <field name="itl_document_type" readonly="1" attrs="{'invisible': [('itl_payment_control_id','=',False)]}"/>
+                    <field name="itl_pediment" readonly="1" attrs="{'invisible': ['|',('itl_document_type','!=','pediment'),('itl_payment_control_id','=',False)]}" placeholder="15  48  3009  0001234"/>
+                    <field name="itl_foreing_invoice" readonly="1" attrs="{'invisible': ['|',('itl_document_type','!=','foreing_invoice'),('itl_payment_control_id','=',False)]}"/>
+                </xpath>
+                
+                <xpath expr="//sheet" position="before">
+                   <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                        attrs="{'invisible': [('itl_document_type','=',False)]}">
+                       <strong>This purchase order has payment without invoice.</strong>
+                   </div>
+                </xpath>
+                <!--
+                <button name="payment_request_approval" position="attributes">
+                    <attribute name="context">{'hide_payment_control': True}</attribute>
+                </button>
+                -->
+                <xpath expr="//form/header" position="inside">
+                    <button name="payment_request_approval" type="object" string="Payment w/o invoice" class="oe_highlight" attrs="{'invisible': ['|','|','|',('hide_payment_request_button','=',False),('itl_payment_control_id','!=',False),('state','not in',('done','purchase')),('payment_approval_id','!=',False)]}" context="{'default_itl_is_payment_control': True, 'readonly_itl_is_payment_control': True, 'required_document_type': True}"/>
+                </xpath>
+                
+                <xpath expr="//button[@name='%(purchase_deposit.action_view_purchase_advance_payment_inv)d']" position="replace">
+                    <button
+                        name="%(purchase_deposit.action_view_purchase_advance_payment_inv)d"
+                        states="purchase"
+                        type="action"
+                        string="Register Deposit"
+                        invisible="1"
+                    />
+                </xpath>
+                
+            </field>
+        </record>
+    
+    </data>
+</odoo>

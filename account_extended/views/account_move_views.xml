@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <record id="view_move_form_custom" model="ir.ui.view">
+            <field name="name">account.move.form.custom</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
+                    <field name="name_legacy" optional="show"/>
+                </xpath>
+                <!--<xpath expr="//notebook/page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='start_date']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='end_date']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>-->
+                <xpath expr="//notebook/page[@id='invoice_tab']/field[@name='invoice_line_ids']/tree/field[@name='analytic_tag_ids']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_l10n_mx_edi_invoice_form_inherit_custom" model="ir.ui.view">
+            <field name="name">l10n_mx_edi.invoice.form.inherit.custom</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_mx_edi.view_l10n_mx_edi_invoice_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="l10n_mx_edi_payment_method_id" position="attributes">
+                    <attribute name="string">Payment method</attribute>
+                </field>
+                <field name="l10n_mx_edi_usage" position="attributes">
+                    <attribute name="string">Use</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

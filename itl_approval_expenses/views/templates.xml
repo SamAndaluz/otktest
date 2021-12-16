@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        
+        <template id="message_approval_expense_origin_link">
+            <p>This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been approved from:
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.name"/></a>
+                </t>
+            </p>
+        </template>
+        
+        <template id="message_approval_expense_created_link">
+            <p>The approval request <a href="#" t-att-data-oe-model="self._name" t-att-data-oe-id="self.id"> <t t-esc="self.name"/></a> was created successfuly.
+            </p>
+        </template>
+        
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="group_show_payment_invoice_button" model="res.groups">
+        <field name="name">Show special button to pay bill</field>
+        <field name="comment">Show special button to pay bill</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+stock.access_stock_inventory_user,stock.inventory user,model_stock_inventory,itl_stock_adjustment.group_warehouse_owners,1,0,0,0
+stock.access_stock_inventory_line_user,stock.inventory.line user,model_stock_inventory_line,itl_stock_adjustment.group_warehouse_owners,1,1,0,0
+stock.access_stock_inventory_filling_report,stock.inventory.filling.report user,model_stock_inventory_filling_report,itl_stock_adjustment.group_warehouse_owners,1,1,1,0
+stock.access_stock_inventory_filling_report_stock_admin,stock.inventory.filling.report stock admin,model_stock_inventory_filling_report,stock.group_stock_manager,1,1,1,0
+stock.access_stock_inventory_filling_report_stock_user,stock.inventory.filling.report stock user,model_stock_inventory_filling_report,stock.group_stock_user,1,1,1,0

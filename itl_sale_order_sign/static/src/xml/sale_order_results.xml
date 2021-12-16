@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="so_rersults_template">
+        <div class="o_so_results_main_menu_container o_home_menu_background">
+            <div class="o_so_results_main_menu position-relative">
+                <a href="#" class="o_so_results_menu d-block float-left"><i class="fa fa-chevron-left"></i></a>
+                <h1 class="mb-4">Seleccione una orden de venta</h1>
+
+                <p class="text-center mb-sm-5 pl-4">
+                    <span>Se encontró más de una orden de venta con el mismo número</span>
+                </p>
+
+                <hr class="mb-4 d-none d-sm-block"/>
+                
+                <ul>
+                    <t t-foreach="o.orders" t-as="order">
+                        <li>
+                            <p>
+                                <t t-esc="order.name"/>
+                            </p>
+                        </li>
+                    </t>
+                </ul>
+
+            </div>
+        </div>
+    </t>
+
+</templates>

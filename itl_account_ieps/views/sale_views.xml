@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        
+        <record id="itl_view_sale_order_form_custom_tax" model="ir.ui.view">
+            <field name="name">.itl.sale.order.custom.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
+                    <attribute name="domain">[('type_tax_use','=','sale'),('company_id','=',parent.company_id),('itl_hide_in','=',False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

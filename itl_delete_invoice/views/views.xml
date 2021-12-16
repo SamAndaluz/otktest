@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+    
+        <!--
+        <act_window name="Force delete invoices"
+            id="force_delete_invoice"
+            res_model="account.move"
+        />-->
+        
+        <record id="force_delete_invocie_action_server" model="ir.actions.server">
+            <field name="name">Force delete invoice</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.force_delete_invoice()
+            </field>
+        </record>
+    </data>
+</odoo>

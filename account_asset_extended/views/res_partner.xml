@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_custom" model="ir.ui.view">
+            <field name="name">res.partner.form.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="asset_locations" string="Asset locations" 
+                          attrs="{'invisible': [('type','!=','other')]}" 
+                          groups="base.group_system">
+                        <group>
+                            <group>
+                                <field name="asset_location_ids">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group></group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

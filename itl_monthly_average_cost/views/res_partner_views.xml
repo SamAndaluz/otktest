@@ -1,0 +1,14 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="itl_partner_extended_form">
+        <field name="name">itl.partner.extended.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <group name="purchase" position="inside">
+                <field name="itl_create_journal_in_receipt" readonly="0"/>
+            </group>
+        </field>
+      </record>
+  </data>
+</odoo>

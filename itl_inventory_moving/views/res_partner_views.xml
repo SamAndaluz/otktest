@@ -1,0 +1,27 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="itl_partner_extended_form_logistic_company">
+        <field name="name">itl.partner.extended.form.logistic.company</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="itl_is_logistic_company"/>
+                <field name="itl_is_warehouse_contact"/>
+                <field name="itl_is_employee"/>
+            </field>
+        </field>
+      </record>
+      
+      <record id="itl_view_partner_form_warehouse" model="ir.ui.view">
+        <field name="name">itl.partner.extended.form.warehouse</field>
+        <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[1]/field[@name='child_ids']/form/sheet/group[1]/group[2]/field[@name='mobile']" position="after">
+                <field name="itl_is_warehouse_contact"/>
+            </xpath>
+        </field>
+      </record>
+  </data>
+</odoo>

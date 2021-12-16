@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    
+    <record id="itl_view_stock_move_line_operation_tree_more_lots" model="ir.ui.view">
+        <field name="name">stock.move.line_more_lots</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree" />
+        <field name="arch" type="xml">
+            <field name="lot_id" position="after">
+                <field name="state" invisible="1"/>
+                <button name="show_all_lots" type="object" icon="fa-info-circle" 
+                        help="Select from all lots" 
+                        groups="itl_lot_restriction.group_itl_select_all_lots" 
+                        attrs="{'invisible': [('state','in',['done','cancel'])]}"/>
+            </field>
+        </field>
+    </record>
+    
+    <record id="itl_view_stock_production_lot_all" model="ir.ui.view">
+        <field name="name">itl.stock.production.lot</field>
+        <field name="model">itl.stock.production.lot.all</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p class="oe_black">
+                        Select the lot number to use.
+                    </p>
+                    <group>
+                        <field name="itl_product_id" invisible="1"/>
+                        <field name="itl_lot_id" domain="[('product_id','=',itl_product_id)]" options="{'no_create': True, 'no_create_edit':True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="use_lot" string="Use" type="object" class="btn-primary"/> 
+                    <button string="Cancel" class="btn-default" special="cancel"/>   
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="itl_prepare_picking_form_more_lots" model="ir.ui.view">
+        <field name="name">itl.prepare.picking.form.more.lots</field>
+        <field name="model">itl.prepare.picking</field>
+        <field name="inherit_id" ref="itl_inventory_moving.itl_prepare_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='itl_stock_move_line_id']/tree/field[@name='lot_id']" position="after">
+                <field name="state" invisible="1"/>
+                <button name="show_all_lots" type="object" icon="fa-info-circle" 
+                        help="Select from all lots" 
+                        groups="itl_lot_restriction.group_itl_select_all_lots" 
+                        attrs="{'invisible': [('state','in',['done','cancel'])]}" context="{'from_prepare_picking': True}"/>
+                <field name="itl_product_uom_qty" />
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="itl_prepare_picking_form_more_lots_2" model="ir.ui.view">
+        <field name="name">itl.prepare.picking.form.more.lots</field>
+        <field name="model">itl.prepare.picking.two</field>
+        <field name="inherit_id" ref="itl_inventory_moving.itl_prepare_picking_2_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='itl_stock_move_line_id']/tree/field[@name='lot_id']" position="after">
+                <field name="state" invisible="1"/>
+                <button name="show_all_lots" type="object" icon="fa-info-circle" 
+                        help="Select from all lots" 
+                        groups="itl_lot_restriction.group_itl_select_all_lots" 
+                        attrs="{'invisible': [('state','in',['done','cancel'])]}" context="{'from_prepare_picking_2': True}"/>
+                <field name="itl_product_uom_qty" />
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

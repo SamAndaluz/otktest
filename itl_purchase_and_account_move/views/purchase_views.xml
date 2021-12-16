@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <!--<record id="view_order_form_custom" model="ir.ui.view">
+            <field name="name">purchase.order.form.custom</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <field name="date_approve" position="after">
+                    <field name="received_products"/>
+                </field>
+            </field>
+        </record>-->
+        
+        <record id="purchase_order_view_form_inherit_custom" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit.custom</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase_stock.purchase_order_view_form_inherit" />
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="has_services" readonly="1" groups="base.group_no_one"/>
+                    <field name="has_products" readonly="1" groups="base.group_no_one"/>
+                    <field name="received_products" readonly="1" attrs="{'invisible': ['|',('state','not in',['purchase','done']),('has_services','=',True),('has_products','=',False)]}"/>
+                    <field name="received_products_manual" attrs="{'invisible': ['|',('state','not in',['purchase','done']),'&amp;',('has_services','=',False),('has_products','=',True)]}"/>
+                    <field name="user_change_received_products" attrs="{'invisible': ['|',('received_products','!=',False),('approval_status','!=' , 'approved')]}" force_save="1"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

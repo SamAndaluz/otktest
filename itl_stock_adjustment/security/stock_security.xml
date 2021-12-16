@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_warehouse_owners" model="res.groups">
+        <field name="name">Warehouse Owners</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="stock.menu_action_inventory_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
+    </record>
+</odoo>

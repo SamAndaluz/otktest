@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+        <record id="purchase_order_form_custom" model="ir.ui.view">
+            <field name="name">purchase.order.form.custom</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@id='draft_confirm']" position="attributes">
+                    <attribute name="groups">itl_approval_purchase.group_confirm_po</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@id='bid_confirm']" position="attributes">
+                    <attribute name="groups">itl_approval_purchase.group_confirm_po</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_view_invoice']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_view_invoice'][last()]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <button name="button_approve" position="replace">
+                    <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" invisible="1"/>
+                </button>
+                <xpath expr="//form/sheet/notebook" position="before">
+                    <group string="Approvals" attrs="{'invisible': [('approval_request_id','=',False)]}">
+                        <group id="group_purchase_approval">
+                            <field name="has_approval_group" gropups="base.group_no_one" readonly="1" invisible="1"/>
+                            <field name="approval_request_id" attrs="{'invisible': [('approval_request_id','=',False)]}" readonly="1"/>
+                            <field name="approval_status" attrs="{'invisible': [('approval_request_id','=',False)]}"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//form/header" position="inside">
+                    <button name="send_to_approve" type="object" string="Send to approve" class="oe_highlight" attrs="{'invisible': ['|',('state','!=','draft'),('has_approval_group','=',True)]}"/>
+                </xpath>
+                
+                <xpath expr="//form/sheet/div[@name='button_box']" position="after">
+                    <widget name="web_ribbon" 
+                            title="Approved"
+                            attrs="{'invisible': [('approval_status', '!=', 'approved')]}"/>
+                    <widget name="web_ribbon" 
+                            title="Rejected"
+                            attrs="{'invisible': [('approval_status', 'not in', ('refused'))]}"
+                            bg_color="bg-danger" />
+                </xpath>
+                <button name="button_draft" position="attributes">
+                    <attribute name="states">cancel,refused</attribute>
+                </button>
+                <field name="order_line" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', 'in', ('purchase','done', 'cancel','to approve'))]}</attribute>
+                </field>
+                
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_quick_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

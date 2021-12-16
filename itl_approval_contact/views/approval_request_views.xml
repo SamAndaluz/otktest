@@ -1,0 +1,18 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_partner" model="ir.ui.view">
+        <field name="name">approval.request.view.form.partner</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="amount" position="after">
+                <field name="category_code" readonly="1" invisible="1"/>
+                <field name="partner_id" attrs="{'invisible': [('category_code','!=','CONTACT')]}" domain="[('state','=','draft')]" readonly="1"/>
+
+                <field name="company_id" groups="base.group_no_one" readonly="1" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

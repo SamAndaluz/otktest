@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        
+        <record id="view_account_move_form_itl_payment_wo_invoice" model="ir.ui.view">
+            <field name="name">account.move.custom.form.itl.payment.wo.invoice</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group[1]/group[1]" position="inside">
+                    <field name="itl_payment_control_done" invisible="1"/>
+                    <field name="itl_is_advance_payment" invisible="1"/>
+                    <field name="itl_is_payment_wo_invoice" attrs="{'invisible': ['|',('itl_is_advance_payment','=',True),('state', '!=', 'posted')], 'readonly': [('itl_payment_control_done','=',True)]}"/>
+                    <label for="itl_payment_control_id" attrs="{'invisible': [('itl_is_payment_wo_invoice','=',False)]}"/>
+                    <div class="o_row">
+                        <field name="itl_payment_control_id" attrs="{'invisible': [('itl_is_payment_wo_invoice','=',False)], 'readonly': [('itl_payment_control_done','=',True)]}" domain="[('itl_is_done','=',False)]" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"/>
+                        <button name="itl_payment_control" string="Apply" class="oe_link" type="object" groups="base.group_user" attrs="{'invisible': ['|',('itl_is_payment_wo_invoice','=',False),('itl_payment_control_done','=',True)]}"/>
+                    </div>
+                </xpath>
+                
+                <xpath expr="//form/div[@class='alert alert-warning'][3]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|','|','|','|',('received_products','!=',False),('type','!=','in_invoice'),('invoice_payment_state','=','paid'),('itl_is_advance_payment','=',True),('itl_is_payment_wo_invoice','=',True)]}</attribute>
+                </xpath>
+                
+                <xpath expr="//button[@name='action_invoice_register_payment']" position="after">
+                    <button name="action_invoice_register_payment" id="account_invoice_payment_btn" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|','|','|',('itl_is_advance_payment','=',False),('state', '!=', 'posted'),('invoice_payment_state', '!=', 'not_paid'),('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
+                            string="Register Payment" groups="account.group_account_invoice"/>
+                </xpath>
+                
+                <xpath expr="//notebook" position="inside">
+                    <page string="Related Documents" attrs="{'invisible': [('itl_is_payment_wo_invoice','=',False)]}">
+                        <group>
+                            <field name="itl_purchase_id" readonly="1"/>
+                            <field name="itl_advance_bill_id" readonly="1"/>
+                        </group>
+                        <group></group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+      
+    </data>
+</odoo>

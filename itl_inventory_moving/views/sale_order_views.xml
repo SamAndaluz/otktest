@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="action_orders_approved_and_undelivered" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <!--<field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>-->
+        <field name="context">{}</field>
+        <field name="domain">[('state', 'in', ('approved', 'sale', 'done')),('itl_delivery_status','=','not delivered')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+            </p><p>
+                Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_sale_order_approved_and_undelivered"
+        name="APVD and UNDLD Orders"
+        action="action_orders_approved_and_undelivered"
+        parent="sale.sale_order_menu"
+        sequence="3" groups="sales_team.group_sale_salesman"/>
+    
+    <record id="itl_view_sale_order_form_custom_delivery" model="ir.ui.view">
+        <field name="name">itl.sale.order.custom.form.delivery</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="itl_delivery_status"/>
+            </field>
+        </field>
+    </record>
+    
+    <record id="itl_view_sale_order_form_custom_rme" model="ir.ui.view">
+        <field name="name">itl.sale.order.custom.form.rme</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_order_type.sot_view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="type_id" position="after">
+                <field name="itl_is_rme" invisible="1"/>
+                <label for="itl_sale_origin_id" attrs="{'invisible': [('itl_is_rme','=',False)]}"/>
+                <div class="o_row">
+                    <field name="itl_sale_origin_id" attrs="{'invisible': [('itl_is_rme','=',False)], 'required': [('itl_is_rme','=',True)]}" domain="[('partner_id','=',partner_id),('state','=','sale'),('itl_is_rme','=',False)]"/>
+                    <button name="load_so" string="Load SO" class="oe_link" type="object" groups="base.group_user" attrs="{'invisible': ['|',('itl_is_rme','=',False),('itl_sale_origin_id','=',False)]}"/>
+                    
+                </div>
+                <field name="itl_warehouse_return_id" attrs="{'invisible': [('itl_is_rme','=',False)], 'required': [('itl_is_rme','=',True)]}"/>
+            </field>
+            <field name="order_line" position="attributes">
+                <attribute name="attrs">{'readonly': ['|',('approval_status', 'in', ['pending', 'approved']),('itl_is_rme','=',True)]}</attribute>
+            </field>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="after">
+                <field name="itl_is_rme" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='analytic_tag_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='route_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='customer_lead']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='tax_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="attributes">
+                <attribute name="attrs">{'readonly': [('itl_is_rme','=',True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

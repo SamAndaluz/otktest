@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_product_line,access_approval_product_line,model_approval_product_line,base.group_user,1,1,1,1
+access_approval_department_user,access_approval_department_user,model_approval_department_user,base.group_user,1,1,1,1
+access_approval_so_type_user,access_approval_so_type_user,model_approval_so_type_user,base.group_user,1,1,1,1
+access_approval_sequence_user,access_approval_sequence_user,model_approval_sequence_user,base.group_user,1,1,1,1
+access_approval_sequence_user_so_type,access_approval_sequence_user_so_type,model_approval_sequence_user_so_type,base.group_user,1,1,1,1

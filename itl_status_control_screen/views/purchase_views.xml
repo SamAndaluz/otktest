@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+      
+      <record id="itl_purchase_status_tree" model="ir.ui.view">
+            <field name="name">purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Order">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="partner_ref" optional="hide"/>
+                    <field name="name" string="PO No." readonly="1"/>
+                    <field name="user_id" string="Creator" readonly="1"/>
+                    <field name="partner_id" string="Vendor" readonly="1"/>
+                    <field name="currency_id" string="Currency" readonly="1"/>
+                    <field name="amount_total" string="Amount" readonly="1"/>
+                    <field name="create_date" string="PO Create Date" readonly="1"/>
+                    <field name="itl_manager_appr_date" string="PO Manager Approval date" readonly="1"/>
+                    <field name="itl_finance_1_appr_date" string="PO Finance 1 Approval date" readonly="1"/>
+                    <field name="itl_finance_2_appr_date" string="PO Finance 2 Approval date" readonly="1"/>
+                    <field name="itl_pymnt_rqst_date" string="Payment Req created date" readonly="1"/>
+                    <field name="itl_pymnt_mngr_appr_date" string="Payment Req Manager Apprv date" readonly="1"/>
+                    <field name="itl_pymnt_fin_1_appr_date" string="Payment Req Fin 1 Apprv date" readonly="1"/>
+                    <field name="itl_pymnt_fin_2_appr_date" string="Payment Req Fin 2 Apprv date" readonly="1"/>
+                    <field name="itl_inv_payment_state" string="Invoice Payment Status" readonly="1"/>
+                    <field name="itl_inv_pymnt_date" string="Invoice Payment date" readonly="1"/>
+                    <field name="itl_proof_receipt_date" string="Proof of receipt upload date" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+      
+      <record id="itl_purchase_status_tree_action" model="ir.actions.act_window">
+            <field name="name">Purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+            <field name="view_id" ref="itl_purchase_status_tree"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a request for quotation
+              </p><p>
+                The quotation contains the history of the discussion
+                you had with your vendor.
+              </p>
+            </field>
+        </record>
+      
+  </data>
+</odoo>

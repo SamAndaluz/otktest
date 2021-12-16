@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        
+        <record id="itl_view_logistic_company_tree" model="ir.ui.view">
+            <field name="name">itl.logistic.company.tree</field>
+            <field name="model">logistic.company</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="name"/>
+                    <field name="email" widget="email"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_logistic_company_tree" model="ir.actions.act_window">
+            <field name="name">Logistic companies</field>
+            <field name="res_model">logistic.company</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="itl_view_logistic_company_tree"/>
+        </record>
+        
+        <menuitem
+            id="menu_logistic_company"
+            action="action_logistic_company_tree"
+            name="Logistic companies" parent="stock.menu_warehouse_config" sequence="11"/>
+        
+    </data>
+</odoo>

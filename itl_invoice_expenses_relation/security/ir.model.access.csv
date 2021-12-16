@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_itl_invoice_expenses_relation_itl_invoice_expenses_relation,itl_invoice_expenses_relation.itl_invoice_expenses_relation,model_itl_invoice_expenses_relation_itl_invoice_expenses_relation,base.group_user,1,1,1,1
