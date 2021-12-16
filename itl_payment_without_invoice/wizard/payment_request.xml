@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>	
+
+        <record id="payment_request_form_purchase_without_invoice" model="ir.ui.view">
+            <field name="name">payment.request form</field>
+            <field name="model">itl.payment.request</field>
+            <field name="inherit_id" ref="itl_approval_vendor_bill.payment_request_form_purchase"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group[1]/group[2]" position="replace">
+                    <group invisible="context.get('hide_payment_control')">
+                        <field name="itl_is_payment_control" invisible="0" readonly="context.get('readonly_itl_is_payment_control')"/>
+                        <field name="itl_document_type" attrs="{'invisible': [('itl_is_payment_control','=',False)], 'required': [('itl_is_payment_control','=',True)]}"/>
+                        <field name="itl_pediment" attrs="{'invisible': [('itl_document_type','!=','pediment')], 'required': [('itl_document_type','=','pediment')]}" placeholder="15  48  3009  0001234"/>
+                        <field name="itl_foreing_invoice" attrs="{'invisible': [('itl_document_type','!=','foreing_invoice')], 'required': [('itl_document_type','=','foreing_invoice')]}"/>
+                    </group>
+                </xpath>
+            </field>	
+        </record>
+
+    </data>
+</odoo>

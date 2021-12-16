@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        
+        <template id="assets_backend" name="so_search assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/itl_sale_order_sign/static/src/js/so_search.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/itl_sale_order_sign/static/src/scss/so_search.scss"/>
+            </xpath>
+        </template>
+        
+    </data>
+</odoo>

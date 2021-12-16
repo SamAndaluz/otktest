@@ -1,0 +1,84 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_general" model="ir.ui.view">
+        <field name="name">approval.request.view.form.inherit.general</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="attrs">{'readonly': [('request_status','!=','new')]}</attribute>
+            </field>
+            <field name="quantity" position="attributes">
+                <attribute name="attrs">{'readonly': [('request_status','!=','new')]}</attribute>
+            </field>
+            <field name="amount" position="attributes">
+                <attribute name="attrs">{'readonly': [('request_status','!=','new')]}</attribute>
+            </field>
+            <field name="approver_ids" position="attributes">
+                <attribute name="attrs">{'readonly': [('request_status','!=','new')]}</attribute>
+            </field>
+            <field name="amount" position="after">
+                <field name="category_code" readonly="1" invisible="1"/>
+                <field name="company_id" groups="base.group_no_one" readonly="1"/>
+                <field name="user_status" groups="base.group_no_one" readonly="1"/>
+                <field name="approval_hierarchy" readonly="1" invisible="1"/>
+                <field name="next_approver_id" readonly="1" force_save="1" attrs="{'invisible': [('approval_hierarchy','=',False)]}"/>
+                <!--<field name="is_user_status_pending" groups="base.group_no_one" readonly="1"/>-->
+            </field>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="string">Reject</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='description']" position="before">
+                <page string="Products" name="products" attrs="{'invisible': [('has_product', '=', 'no')]}">
+                    <field name="has_product" invisible="1"/>
+                    <field name="product_line_ids" context="{'tree_view_ref': 'itl_approval_general.approval_product_line_view_tree'}" readonly="1"/>
+                </page>
+            </xpath>
+            <!--
+            <xpath expr="//div[@class='oe_title']/label[@class='oe_edit_only']" position="before">
+                <label for="number"/>
+                <h3>
+                    <field name="number" readonly="1"/>
+                </h3>
+            </xpath>
+            -->
+        </field>
+    </record>
+
+    
+    <record id="approvals.approval_request_action_to_review" model="ir.actions.act_window">
+        <field name="name">Approvals to Review</field>
+        <field name="res_model">approval.request</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">['&amp;','&amp;',('approver_ids.user_id','=',uid),('request_status','=','pending'),'|',('next_approver_id','=',uid),('next_approver_id','=',False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No new approvals to review
+            </p>
+        </field>
+    </record>
+    
+    <record id="approval_request_view_tree_inherit_general" model="ir.ui.view">
+        <field name="name">approval.request.view.tree.inherit.general</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="request_origin"/>
+                <field name="partner_origin"/>
+                <field name="amount_origin"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.actions.server" id="itl_approve_request">
+        <field name="name">Approve requests</field>
+        <field name="model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_model_id" ref="approvals.model_approval_request"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.approve_requests()</field>
+    </record>
+    
+</odoo>

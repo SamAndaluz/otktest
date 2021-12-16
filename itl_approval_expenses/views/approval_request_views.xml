@@ -1,0 +1,23 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_expense" model="ir.ui.view">
+        <field name="name">approval.request.view.form.expense</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[1]" position="after">
+                <group attrs="{'invisible': [('category_code','!=','EXPENSE')]}">
+                    <group string="Expense info">
+                        <field name="category_code" readonly="1" invisible="1"/>
+                        <field name="expense_sheet_id" attrs="{'invisible': [('category_code','!=','EXPENSE')]}" readonly="1"/>
+                        <field name="exs_employee_id" attrs="{'invisible': [('category_code','!=','EXPENSE')]}" readonly="1"/>
+                        <field name="company_id" groups="base.group_no_one" readonly="1" invisible="1"/>
+                    </group>
+                    <group></group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        
+        
+        <record id="itl_sale_order_type_form_view_custom" model="ir.ui.view">
+            <field name="name">itl.sale.order.type.form.view.custom</field>
+            <field name="model">sale.order.type</field>
+            <field name="inherit_id" ref="sale_order_type.sot_sale_order_type_form_view"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="itl_is_rme"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

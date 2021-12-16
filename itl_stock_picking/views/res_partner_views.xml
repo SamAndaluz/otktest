@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="itl_partner_form_view">
+            <field name="name">itl.partner.form.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    
+        <record model="ir.ui.view" id="itl_partner_extended_form">
+            <field name="name">itl.partner.extended.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!--<field name="vat" position="after">
+                    <field name="temporal_vat" groups="base.group_no_one"/>
+                </field>-->
+                <group name="sale" position="inside">
+                    <field name="itl_is_invoice_required"/>
+                    <field name="itl_payment_method_id" attrs="{'readonly': [('itl_is_invoice_required','=',False)], 'required': [('itl_is_invoice_required','=',True)]}" force_save="1"/>
+                    <field name="itl_usage" attrs="{'readonly': [('itl_is_invoice_required','=',False)], 'required': [('itl_is_invoice_required','=',True)]}" force_save="1"/>
+                    <field name="property_payment_term_id" attrs="{'readonly': [('itl_is_invoice_required','=',False)], 'required': [('itl_is_invoice_required','=',True)]}" force_save="1"/>
+                      <!--<field name="is_customer" readonly="1" force_save="1"/>-->
+                </group>
+                <field name="vat" position="attributes">
+                    <attribute name="attrs">{'required': [('itl_is_invoice_required','=',True)]}</attribute>
+                </field>
+            </field>
+        </record>
+    
+    </data>
+</odoo>

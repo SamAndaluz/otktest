@@ -1,0 +1,20 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="partner_extended_form_2">
+        <field name="name">partner.extended.form.2</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet" position="before">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="send_to_approve" type="object" class="btn-primary" string="Send to approve"
+                            attrs="{'invisible': [('state','not in', ['new'])]}"/>
+                    <button name="reset_to_new" type="object" class="btn-primary" string="Reset to new"
+                            attrs="{'invisible': [('state','not in', ['rejected'])]}"/>
+                </header>
+            </xpath>
+        </field>
+      </record>
+  </data>
+</odoo>

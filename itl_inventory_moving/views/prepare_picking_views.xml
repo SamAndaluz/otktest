@@ -1,0 +1,91 @@
+<odoo>
+    
+    <record id="itl_prepare_picking_form" model="ir.ui.view">
+        <field name="name">itl.prepare.picking.form</field>
+        <field name="model">itl.prepare.picking</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="itl_delivery_by" required="1"/>
+                        <field name="itl_logistic_company_id" options="{'no_create': True, 'no_create_edit':True}" domain="[('itl_is_logistic_company','=',True)]" attrs="{'invisible': [('itl_delivery_by','!=','logistic_company')], 'required': [('itl_delivery_by','=','logistic_company')]}"/>
+                        <field name="itl_logistic_company_email" readonly="1" attrs="{'invisible': [('itl_delivery_by','!=','logistic_company')]}"/>
+                        <field name="itl_employee_partner_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'invisible': [('itl_delivery_by','!=','employee')], 'required': [('itl_delivery_by','=','employee')]}" domain="[('itl_is_employee','=',True)]"/>
+                        <field name="itl_employee_email" readonly="1" attrs="{'invisible': [('itl_delivery_by','!=','employee')]}"/>
+                        <field name="itl_driver_name" attrs="{'invisible': [('itl_delivery_by','=','employee')]}"/>
+                        <field name="itl_type_of_car" />
+                        <field name="itl_plate_of_car" />
+                        <field name="itl_pickup_date" />
+                        <field name="itl_delivery_date" />
+                    </group>
+                    <group>
+                        <field name="itl_stock_move_line_id" nolabel="1" >
+                            <tree editable="bottom" create="false">
+                                <field name="company_id" invisible="1"/>
+                                <field name="lot_id_domain" invisible="1"/>
+                                <field name="picking_id" readonly="1"/>
+                                <field name="origin"/>
+                                <field name="product_id" readonly="1"/>
+                                <field name="lot_id" domain="lot_id_domain"/>
+                                <field name="qty_done" />
+                                <field name="product_uom_id" readonly="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="process_picking" string="Procesar" type="object" class="btn-primary"/> 
+                    <button string="Cancel" class="btn-default" special="cancel"/>   
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.actions.server" id="itl_prepare_picking">
+      <field name="name">Preparar movimientos</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="binding_model_id" ref="stock.model_stock_picking"/>
+      <field name="binding_view_types">list</field>
+      <field name="state">code</field>
+      <field name="code">action = records.itl_prepare_picking()</field>
+    </record>
+    
+    <record id="itl_prepare_picking_2_form" model="ir.ui.view">
+        <field name="name">itl.prepare.picking.2.form</field>
+        <field name="model">itl.prepare.picking.two</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <field name="itl_stock_move_line_id" nolabel="1" >
+                    <tree editable="bottom" create="false" delete="false">
+                        <field name="company_id" invisible="1"/>
+                        <field name="lot_id_domain" invisible="1"/>
+                        <field name="origin"/>
+                        <field name="picking_id" readonly="1" options="{'no_open': True}"/>
+                        <!--
+                        <field name="itl_delivery_by" readonly="1" />-->
+                        <field name="itl_logistic_company_id" readonly="1" />
+                        <field name="itl_employee_partner_id" readonly="1" />
+                        <!--<field name="product_id" readonly="1" options="{'no_open': True}"/>-->
+                        <field name="lot_id" domain="lot_id_domain" readonly="0" options="{'no_open': True}"/>
+                        <field name="qty_done" readonly="0"/>
+                        <field name="product_uom_id" readonly="1" options="{'no_open': True}"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="validate_picking" string="Validar" type="object" class="btn-primary" confirm="¿Desea continuar?"/> 
+                    <button string="Cancel" class="btn-default" special="cancel"/>   
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record model="ir.actions.server" id="itl_prepare_picking_two">
+      <field name="name">Validar movimientos</field>
+      <field name="model_id" ref="stock.model_stock_picking"/>
+      <field name="binding_model_id" ref="stock.model_stock_picking"/>
+      <field name="binding_view_types">list</field>
+      <field name="state">code</field>
+      <field name="code">action = records.itl_prepare_picking_two()</field>
+    </record>
+    
+</odoo>

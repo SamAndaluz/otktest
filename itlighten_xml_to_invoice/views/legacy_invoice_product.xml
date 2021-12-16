@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="legacy_invoice_product_list">
+          <field name="name">legacy_invoice_product_list</field>
+          <field name="model">legacy.invoice.product</field>
+          <field name="arch" type="xml">
+              <tree create="false">
+                  <field name="name"/>
+                  <field name="price"/>
+                  <field name="default_code"/>
+                  <field name="type"/>
+                  <field name="l10n_mx_edi_code_sat_id"/>
+                  <field name="uom_id"/>
+                  <field name="uom_po_id"/>
+              </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="legacy_invoice_product_form">
+          <field name="name">legacy_invoice_product_form</field>
+          <field name="model">legacy.invoice.product</field>
+          <field name="arch" type="xml">
+              <form>
+                  <header>
+                      <button name="create_product" string="Crear producto" class="oe_highligth" type="object"/>
+                  </header>
+                  <sheet>
+                      <group>
+                          <group>
+                              <field name="name"/>
+                              <field name="standard_price"/>
+                              <field name="price"/>
+                              <field name="default_code"/>
+                              <field name="type"/>
+                          </group>
+                          <group>
+                              <field name="l10n_mx_edi_code_sat_id"/>
+                                <field name="uom_id"/>
+                                <field name="uom_po_id"/>
+                          </group>
+                      </group>
+                  </sheet>
+              </form>
+          </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="legacy_invoice_product_action_window">
+          <field name="name">Productos temporales</field>
+          <field name="res_model">legacy.invoice.product</field>
+          <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem name="Productos temporales"
+              id="legacy_invoice_product_menu_1"
+              action="legacy_invoice_product_action_window"
+              parent="stock.menu_stock_inventory_control"
+              sequence="17"
+              groups="base.group_user"/>
+    </data>
+</odoo>

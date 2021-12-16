@@ -1,0 +1,45 @@
+<data noupdate="0">
+    
+    <record id="itl_approval_email_notification" model="mail.template">
+        <field name="name">ITL Approval Email Notification</field>
+        <field name="model_id" ref="itl_approvals_general.model_approval_request"/>
+        <field name="subject">Aprobación pendiente ${object.name}</field>
+        <field name="email_from">${(user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.next_approver_id.partner_id.id}</field>
+        <field name="lang">${object.next_approver_id.partner_id.lang}</field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado/estimada <strong>${object.next_approver_id.name}</strong>,
+                    <br/><br/>
+                    Tiene una nueva solicitud de aprobación <strong>${object.name}</strong>. Haga clic <a href="${ctx.get('base_url')}">Aquí</a> para ver la solicitud de aprobación.
+                    <br/><br/>
+                </p>
+            </div>
+        </field>
+    </record>
+    
+    <record id="itl_approval_email_notification_done" model="mail.template">
+        <field name="name">ITL Approval Email Notification Done</field>
+        <field name="model_id" ref="itl_approvals_general.model_approval_request"/>
+        <field name="subject">Tu aprobación ${object.name} fue ${ctx.get('approval_status')}</field>
+        <field name="email_from">${user.email_formatted | safe}</field>
+        <field name="partner_to">${object.request_owner_id.partner_id.id}</field>
+        <field name="lang">${object.request_owner_id.partner_id.lang}</field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado/estimada <strong>${object.request_owner_id.name}</strong>,
+                    <br/><br/>
+                    Tu solicitud de aprobación <strong>${object.name}</strong> fue ${ctx.get('approval_status')}. Haga clic <a href="${ctx.get('base_url')}">Aquí</a> para ver la solicitud de aprobación.
+                    <br/><br/>
+                </p>
+            </div>
+        </field>
+    </record>
+    
+</data>

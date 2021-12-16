@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        
+        <menuitem name="Status Control Screen" id="itl_status_control_screen.menu_root" web_icon="itl_status_control_screen,static/description/icon.png"/>
+        
+        <menuitem name="Purchases" id="itl_status_control_screen.menu_purchase" parent="itl_status_control_screen.menu_root" action="itl_status_control_screen.itl_purchase_status_tree_action"/>
+        
+        <menuitem name="Sales" id="itl_status_control_screen.menu_sale" parent="itl_status_control_screen.menu_root" action="itl_status_control_screen.itl_sale_status_tree_action"/>
+        
+        <menuitem name="Expenses" id="itl_status_control_screen.menu_expense" parent="itl_status_control_screen.menu_root" />
+        <menuitem name="Expense Reports" id="itl_status_control_screen.menu_normal_expense_report" parent="itl_status_control_screen.menu_expense" action="itl_status_control_screen.itl_normal_expense_status_tree_action"/>
+        <menuitem name="Advance Expense Reports" id="itl_status_control_screen.menu_advance_expense_report" parent="itl_status_control_screen.menu_expense" action="itl_status_control_screen.itl_advance_expense_status_tree_action"/>
+        <!--
+        <menuitem name="Sales" id="itl_status_control_screen.menu_sale" parent="itl_status_control_screen.menu_root" action="itl_status_control_screen.itl_sale_status_tree_action"/>
+        
+        -->
+
+    </data>
+</odoo>

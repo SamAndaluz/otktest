@@ -1,0 +1,37 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_purchase" model="ir.ui.view">
+        <field name="name">approval.request.view.form.purchase</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[1]" position="after">
+                <group attrs="{'invisible': [('category_code','!=','PURCHASE')]}">
+                    <group string="Purchase info">
+                        <field name="category_code" readonly="1" invisible="1"/>
+                        <field name="purchase_id" attrs="{'invisible': [('category_code','!=','PURCHASE')]}" domain="[('state','=','draft')]" readonly="1"/>
+                        <field name="purchase_partner_id" attrs="{'invisible': [('category_code','!=','PURCHASE')]}" domain="[('state','=','draft')]" readonly="1"/>
+                        <field name="company_id" groups="base.group_no_one" readonly="1" invisible="1"/>
+                    </group>
+                    <group></group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <!--
+    <record id="approval_request_view_tree_inherit_purchase" model="ir.ui.view">
+        <field name="name">approval.request.view.tree.inherit.purchase</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='partner_origin']" position="after">
+                <field name="purchase_currency_id" invisible="1"/>
+                <field name="amount_origin" widget="monetary" options="{'currency_field': 'purchase_currency_id'}"/>
+            </xpath>
+        </field>
+    </record>
+    -->
+    
+</odoo>

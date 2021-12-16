@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_itl_dmf_request,itl_dmf,model_itl_request,group_show_descarga_masiva,1,1,1,1
+access_itl_dmf_response,itl_dmf,model_itl_response,group_show_descarga_masiva,1,1,1,1

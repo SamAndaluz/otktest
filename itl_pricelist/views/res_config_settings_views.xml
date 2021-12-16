@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="res_config_settings_view_form_pricelist_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pricelist.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="inside">
+                
+                <h2 class="mt32">Pricelis approval</h2>
+                
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="itl_pricelist_approval"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="itl_pricelist_approval" string="Pricelist Approval New"/>
+                            <div class="text-muted">
+                                Pricelist Approval New.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('itl_pricelist_approval','=',False)]}">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Approval category</span>
+                            <div class="text-muted">
+                                Approval category to create when send pricelist.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="itl_pricelist_approval_category_id" class="col-lg-3 o_light_label"/>
+                                    <field name="itl_pricelist_approval_category_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

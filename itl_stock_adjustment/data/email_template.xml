@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_adjust_mail_template" model="mail.template">
+        <field name="name">Global stock adjustment</field>
+        <field name="model_id" ref="stock.model_stock_inventory"/>
+        <field name="subject">Report request filling ${'%s' % (object.name)}</field>
+        <field name="email_from">${('%s' % (object.create_uid.partner_id.email))|safe}</field>
+        <field name="email_to">${('%s' % (object.create_uid.partner_id.email))|safe}</field>
+        <field name="email_bcc">${object.get_email_to()}</field>
+        <field name="body_html" type="html">
+<table style="width: 100%; border-spacing: 0; font-family: Heluientevetica,Arial,Verdana,sans-serif;">
+    <tr>
+        <td align="left" valign="top" style="border-collapse: collapse; padding: 0">
+Dear warehouse responsible. <br/>
+Please conduct physical inventory count as of
+${format_datetime(object.create_date, tz=object.create_uid.tz, dt_format='dd/MM/YYYY')} and input the
+result of the count in Odoo
+<a href="${object.get_url(None, object.get_action_from_name(), 'stock.inventory.line', 'tree')}">
+    ${object.name}
+</a> by ${format_datetime(object.filling_inventory_deadline, tz=object.create_uid.tz, dt_format='hh:mm')} hrs.
+on ${format_datetime(object.filling_inventory_deadline, tz=object.create_uid.tz, dt_format='dd/MM/YYYY')}.<br/>
+Thank you.<br/>
+Otsuka Supply Chain team.
+        </td>
+    </tr>
+</table></field>
+        <field name="lang">${user.lang}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="user_signature" eval="False"/>
+    </record>
+</odoo>

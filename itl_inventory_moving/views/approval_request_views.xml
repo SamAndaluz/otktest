@@ -1,0 +1,24 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_transfer" model="ir.ui.view">
+        <field name="name">approval.request.view.form.transfer</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[1]" position="after">
+                <group attrs="{'invisible': [('category_code','!=','TRANSFER')]}">
+                    <group string="Transfer info">
+                        <field name="category_code" readonly="1" invisible="1"/>
+                        <field name="stock_picking_id" attrs="{'invisible': [('category_code','!=','TRANSFER')]}" readonly="1"/>
+                        <field name="warehouse_id" attrs="{'invisible': [('category_code','!=','TRANSFER')]}" readonly="1"/>
+                        <field name="warehouse_dest_id" attrs="{'invisible': [('category_code','!=','TRANSFER')]}" readonly="1"/>
+                        <field name="company_id" groups="base.group_no_one" readonly="1" invisible="1"/>
+                    </group>
+                    <group></group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,87 @@
+<odoo>
+    <data>
+    
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="invoice_origin" invisible="0" position="move"/>
+                    <field name="has_first_approval" invisible="1"/>
+                    <field name="is_finance_manager" invisible="1"/>
+                    <field name="was_send" invisible="1"/>
+                    <field name="is_approver2" invisible="1"/>
+                    <field name="approval_vendor_bill_status" invisible="1"/>
+                </field>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="is_purchase_or_sale_origin" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_post']" position="replace">
+                    <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="itl_invoice_approval.group_post_invoice"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_post_itl_invoice_approval" string="Post" class="oe_highlight"
+                                type="object"
+                                attrs="{'invisible': ['|',('state', '!=', 'draft'),('is_purchase_or_sale_origin','=',False)]}"/>
+                </xpath>
+                <xpath expr="//form//header" position="inside">
+                    <button name="action_post" string="Approve" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|','|','|',('state', '!=', 'draft'),('is_purchase_or_sale_origin','=',True),('has_first_approval','=',False),('is_approver2','=',False)]}"/>
+                </xpath>
+                <xpath expr="//form//header" position="inside">
+                    <button name="button_approve_first" type="object" string="First approval" class="oe_highlight" 
+                            attrs="{'invisible': ['|','|',('is_purchase_or_sale_origin','=',True),('has_first_approval','=',True),('is_finance_manager','=',False)]}"
+                            />
+                </xpath>
+                <xpath expr="//form//header" position="inside">
+                    <button name="button_send_to_approve" type="object" string="Send to approve" class="oe_highlight" 
+                            attrs="{'invisible': ['|','|','|','|','|',('state','in',['posted','cancel']),('is_purchase_or_sale_origin','=',True),('was_send','=',True),('has_first_approval','=',True),('type','not in',['in_invoice','in_refund']),('id','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="itl_invoice_approval.action_window">
+      <field name="name">itl_invoice_approval window</field>
+      <field name="res_model">itl_invoice_approval.itl_invoice_approval</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="itl_invoice_approval.action_server">
+      <field name="name">itl_invoice_approval server</field>
+      <field name="model_id" ref="model_itl_invoice_approval_itl_invoice_approval"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="itl_invoice_approval" id="itl_invoice_approval.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="itl_invoice_approval.menu_1" parent="itl_invoice_approval.menu_root"/>
+    <menuitem name="Menu 2" id="itl_invoice_approval.menu_2" parent="itl_invoice_approval.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="itl_invoice_approval.menu_1_list" parent="itl_invoice_approval.menu_1"
+              action="itl_invoice_approval.action_window"/>
+    <menuitem name="Server to list" id="itl_invoice_approval" parent="itl_invoice_approval.menu_2"
+              action="itl_invoice_approval.action_server"/>
+-->
+  </data>
+</odoo>

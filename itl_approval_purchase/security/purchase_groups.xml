@@ -1,0 +1,9 @@
+<odoo>
+    <data noupdate="0">
+        <record id="group_confirm_po" model="res.groups">
+            <field name="name">Allow to confirm PO</field>
+            <field name="category_id" ref="base.module_category_operations_purchase"/>
+        </record>
+        
+    </data>
+</odoo>

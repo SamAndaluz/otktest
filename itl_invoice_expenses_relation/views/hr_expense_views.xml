@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record id="hr_expense_view_form_inherit" model="ir.ui.view">
+            <field name="name">hr.expense.view.form</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <field name="reference" position="before">
+                    <field name="partner_id" attrs="{'required': [('advance','=',False)], 'invisible': [('advance','=',True)]}"/>
+                </field>
+                <field name="reference" position="after">
+                    <label for="invoice_related_id" attrs="{'invisible': [('advance','=',True)]}"/>
+                    <div class="o_row">
+                        <field name="invoice_related_id" domain="[('state','in',['draft','posted']),('partner_id','=',partner_id),('type', '=', 'in_invoice'),('has_expense','=',False)]" attrs="{'invisible': ['|',('partner_id','=',False),('advance','=',True)]}"/>
+                        <button name="attach_bill" string="Attach bill" class="oe_link" type="object" groups="base.group_user" attrs="{'invisible': ['|',('invoice_related_id','=',False),('advance','=',True)]}"/>
+                    </div>
+                    <field name="invoice_date" attrs="{'invisible': [('advance','=',True)]}"/>
+                    <field name="invoice_amount_untaxed" attrs="{'invisible': [('advance','=',True)]}"/>
+                    <field name="invoice_amount_total" attrs="{'invisible': [('advance','=',True)]}"/>
+                </field>
+                <field name="reference" position="attributes">
+                    <attribute name="invisible">[('advance','=',True)]</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

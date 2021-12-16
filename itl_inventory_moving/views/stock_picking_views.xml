@@ -1,0 +1,189 @@
+<odoo>
+    <data>
+        
+        <record id="itl_view_picking_form" model="ir.ui.view">
+            <field name="name">itl.stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)]}</attribute>
+                </field>
+                <field name="scheduled_date" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)]}</attribute>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)]}</attribute>
+                </field>
+                <field name="origin" position="after">
+                    <field name="itl_origin_sale" attrs="{'invisible': [('itl_is_return','=',False)]}"/>
+                    <field name="itl_delivery_by" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|',('itl_sequence_code','=','PICK'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                    <field name="itl_logistic_company_id" options="{'no_create': True, 'no_create_edit':True}" domain="[('itl_is_logistic_company','=',True)]" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|',('itl_delivery_by','!=','logistic_company'),('itl_sequence_code','=','PICK')]}"/>
+                    <field name="itl_logistic_company_email" readonly="1" attrs="{'invisible': [('itl_delivery_by','!=','logistic_company')]}"/>
+                    <field name="itl_employee_partner_id" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': [('itl_delivery_by','!=','employee')]}" domain="[('itl_is_employee','=',True)]"/>
+                    <field name="itl_employee_email" readonly="1" attrs="{'invisible': [('itl_delivery_by','!=','employee')]}"/>
+                    <field name="itl_transfer_origin" invisible="1"/>
+                    <field name="show_operations" invisible="1"/>
+                    <field name="show_reserved" invisible="1"/>
+                    <field name="is_locked" invisible="1"/>
+                    <field name="scheduled_date" invisible="1"/>
+                    <field name="itl_is_return" invisible="1"/>
+                    <field name="itl_is_rme" invisible="1"/>
+                    <field name="itl_sequence_code" invisible="1"/>
+                    <field name="itl_driver_name" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)],'invisible': ['|','|',('itl_delivery_by','in',['employee','collected_employee']),('itl_sequence_code','=','PICK'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                    <field name="itl_type_of_car" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|','|',('itl_sequence_code','=','PICK'),('itl_delivery_by','=','collected_employee'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                    <field name="itl_plate_of_car" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|','|',('itl_sequence_code','=','PICK'),('itl_delivery_by','=','collected_employee'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                    <field name="itl_purchase_id" force_save="1" domain="[('partner_id','=',itl_logistic_company_id)]" options="{'no_create': True, 'no_create_edit':True}" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': [('itl_delivery_by','!=','logistic_company')]}"/>
+                    <field name="itl_exchange_receipt_id" readonly="1" attrs="{'invisible': ['|',('itl_is_rme','=',False),('picking_type_code', 'in', ['incoming'])]}"/>
+                    <field name="itl_transfer_picking_id" readonly="1" attrs="{'invisible': [('picking_type_code', 'not in', ['internal'])]}"/>
+                </field>
+                <field name="scheduled_date" position="after">
+                    <field name="itl_pickup_date" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|',('itl_sequence_code','=','PICK'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                    <field name="itl_delivery_date" attrs="{'readonly': ['|',('state', '=', 'done'),('itl_transfer_origin','=',True)], 'invisible': ['|','|',('itl_sequence_code','=','PICK'),('itl_delivery_by','=','collected_employee'),'&amp;',('picking_type_code', 'in', ['incoming']),('itl_is_return','=',False)]}"/>
+                </field>
+                <field name="location_dest_id" position="after">
+                    
+                    <field name="itl_location_warehouse_id" readonly="1" string="Destination Warehouse" attrs="{'invisible': [('picking_type_code', 'not in', ['incoming'])]}" force_save="1"/>
+                    <field name="itl_address_warehouse_id" readonly="1" string="Destination Address" context="{'show_address_only':1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': [('picking_type_code', 'not in', ['incoming'])]}" force_save="1"/>
+                    <field name="itl_origin_contact_id" string="Destination Contact" context="{'show_contact_only': 1, 'show_email': 1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('picking_type_code', 'in', ['internal','outgoing']),('itl_sequence_code','=','PICK')]}" readonly="1"/>
+                    
+                    <field name="itl_location_warehouse_id" readonly="1" attrs="{'invisible': [('picking_type_code', 'not in', ['outgoing'])]}" force_save="1"/>
+                    <field name="itl_address_warehouse_id" readonly="1" context="{'show_address_only':1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': [('picking_type_code', 'not in', ['outgoing'])]}" force_save="1"/>
+                    <field name="itl_origin_contact_id" context="{'show_contact_only': 1, 'show_email': 1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('picking_type_code', 'in', ['internal','incoming']),('itl_sequence_code','=','PICK')]}" readonly="1"/>
+                    <!--<field name="itl_email_warehouse" readonly="1" attrs="{'invisible': [('picking_type_code', 'not in', ['internal'])]}"/>-->
+                    <!--<field name="itl_origin_email" readonly="1" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}"/>-->
+                    <field name="itl_approval_request_id" attrs="{'invisible': [('itl_approval_request_id','=',False)]}"/>
+                    <field name="itl_approval_status" attrs="{'invisible': [('itl_approval_request_id','=',False)]}"/>
+                </field>
+                <field name="location_id" position="after">
+                    
+                    <!--<field name="itl_warehouse_contact_child_ids" invisible="1"/>-->
+                    <!--<field name="itl_address_warehouse_child_ids" invisible="1"/>-->
+                    <field name="itl_source_contact_id" context="{'show_contact_only': 1, 'show_email': 1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" force_save="1" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" readonly="1"/>
+                    <field name="itl_location_dest_id"  options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}"/>
+                    <field name="itl_warehouse_dest_id" readonly="1" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" force_save="1"/>
+                    <field name="itl_address_dest_id" readonly="1" context="{'show_address_only':1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" force_save="1"/>
+                    <!--<field name="itl_warehouse_dest_contact_child_ids" invisible="1"/>-->
+                    <field name="itl_dest_contact_id" force_save="1" context="{'show_contact_only': 1, 'show_email': 1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" readonly="1"/>
+                    <!--<field name="itl_dest_email" readonly="1" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}"/>-->
+                    <field name="itl_hide_validate_button1" invisible="1"/>
+                    <field name="itl_hide_validate_button2" invisible="1"/>
+                    <field name="immediate_transfer" invisible="1"/>
+                    <field name="itl_hide_send_to_approve" invisible="1"/>
+                </field>
+                <xpath expr="//form/header/button[@name='button_validate'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('itl_hide_validate_button1', '=', True)]}</attribute>
+                    <attribute name="groups">itl_inventory_moving.itl_group_stock_user</attribute>
+                </xpath>
+                <field name="location_id" position="before">
+                    <field name="itl_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}"/>
+                    <field name="itl_warehouse_id" readonly="1" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" force_save="1"/>
+                    <field name="itl_address_origin_id" readonly="1" context="{'show_address_only':1}" options="{'always_reload': True ,'no_create': True, 'no_open': True}" attrs="{'invisible': ['|',('picking_type_code', 'in', ['incoming','outgoing']),('itl_sequence_code','=','PICK')]}" force_save="1"/>
+                </field>
+                
+                <field name="location_dest_id" position="attributes">
+                    <!--<attribute name="groups">base.group_no_one</attribute>-->
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="attrs">{'invisible': [('picking_type_code', 'in', ['outgoing','internal']),('itl_sequence_code','!=','PICK')]}</attribute>
+                    <!--<attribute name="attrs">{'invisible': False}</attribute>-->
+                    <attribute name="force_save">1</attribute>
+                </field>
+                <field name="location_id" position="attributes">
+                    <!--<attribute name="groups">base.group_no_one</attribute>-->
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="attrs">{'invisible': [('picking_type_code', 'in', ['incoming','internal']),('itl_sequence_code','!=','PICK')]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </field>
+                <field name="partner_id" position="attributes">
+                    <attribute name="context">{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': False}</attribute>
+                    <attribute name="options">{"always_reload": True}</attribute>
+                </field>
+                <!--
+                <field name="move_line_ids_without_package"
+                                   attrs="{'readonly': ['|', '|', ('show_operations', '=', False), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"
+                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>-->
+                <!--
+                <field name="move_line_ids_without_package" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|','|', '|',('show_operations', '=', False), ('state', '=', 'cancel'),('itl_approval_request_id','!=',False), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}</attribute>
+                </field>
+                -->
+                <field name="move_ids_without_package" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|','|',('itl_transfer_origin', '=', True),('itl_approval_request_id','!=',False),'&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}</attribute>
+                </field>
+                <xpath expr="//form/header/button[@name='button_validate'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': True}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <button
+                        name="action_back_to_draft"
+                        states="cancel"
+                        string="Back to draft"
+                        groups="base.group_user"
+                        type="object"
+                    />
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting', 'to_approve')), ('is_locked', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('show_mark_as_todo', '=', False)]}</attribute>
+                </xpath>
+                <!--
+                <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">
+                    <attribute name="attrs">{'invisible': False}</attribute>
+                </xpath>
+                -->
+                
+                <xpath expr="//button[@name='button_validate']" position="after">
+                    <button name="send_to_approve" class="btn-primary"
+                        string="Send to approve" type="object" attrs="{'invisible': [('itl_hide_send_to_approve', '=', True)]}"/>
+                    <button name="print_invoice"
+                        string="Print invoice" type="object" attrs="{'invisible': [('picking_type_code','!=','outgoing')]}"/>
+                    <button name="send_logistic_email" string="Send email to logistic company" type="object" attrs="{'invisible': ['|','|',('state', 'not in', ['draft','waiting','confirmed','assigned']),('itl_delivery_by','!=','logistic_company'),('itl_transfer_origin','=',True)]}"/>
+                    <button name="send_employee_email" string="Send email to employee" type="object" attrs="{'invisible': ['|',('itl_delivery_by','!=','employee'),('itl_transfer_origin','=',True)]}"/>
+                    <button name="send_shipping_email_sale" string="Send email to origin wh" type="object" attrs="{'invisible': ['|',('picking_type_code','!=','outgoing'),('itl_transfer_origin','=',True)]}"/>
+                    <button name="send_shipping_email" string="Send email to origin wh" type="object" attrs="{'invisible': ['|',('picking_type_code','!=','internal'),('itl_transfer_origin','=',True)]}"/>
+                    <button name="send_receiving_return_email" string="Send email to dest wh" type="object" attrs="{'invisible': ['|',('picking_type_code','not in',['incoming','internal']),('itl_is_return','=',False)]}"/>
+                    <!--<button name="send_logistic_email"
+                        string="Send email to logistic company" type="object" attrs="{'invisible': ['|','|','|',('state','not in',('approved','assigned')),('itl_transfer_origin','=',True),('itl_approval_request_id','!=',False),('itl_approval_status','!=','approved')]}"/>-->
+                    <button name="create_purchase"
+                        string="Create purchase" type="object" attrs="{'invisible': ['|','|','|',('state','not in',('approved','assigned')),('itl_transfer_origin','=',True),('itl_approval_request_id','!=',False),('itl_approval_status','!=','approved')]}"/>
+                    <button name="itl_action_return" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="object" groups="base.group_user"/>
+                    
+                    <!--<button name="button_unreconcile" string="Unreconcile" type="object"/>
+                    <button name="button_reconcile" string="Reconcile" type="object"/>
+                    -->
+                </xpath>
+                <xpath expr="//form/sheet/div[@name='button_box']" position="after">
+                    <widget name="web_ribbon" 
+                            title="Approved"
+                            attrs="{'invisible': [('itl_approval_status', '!=', 'approved')]}"/>
+                    <widget name="web_ribbon" 
+                            title="Rejected"
+                            attrs="{'invisible': [('itl_approval_status', 'not in', ('refused'))]}"
+                            bg_color="bg-danger" />
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="itl_view_picking_tree" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree" />
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field
+                        name="itl_first_review"
+                    />
+                </field>
+            </field>
+        </record>
+        
+        <record id="itl_vpicktree_filtered" model="ir.actions.act_window">
+            <field name="name">stock.picking.tree</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree</field>
+        </record>
+        
+    </data>
+</odoo>

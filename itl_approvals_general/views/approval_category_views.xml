@@ -1,0 +1,117 @@
+<odoo>
+    
+    <record id="approval_category_view_form_inherit" model="ir.ui.view">
+        <field name="name">approval.category.view.form.inherit</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='options']/group[1]" position="before">
+                <group name="approvers" position="move"/>
+            </xpath>
+            <field name="has_period" position="after">
+                <field name="has_product" string="Product" force_save="1" widget="radio" options="{'horizontal': true}"/>
+            </field>
+            <field name="description" position="before">
+                <field name="code"/>
+            </field>
+            <field name="user_ids" position="replace">
+                <field name="user_ids" attrs="{'invisible': [('approval_by','!=','only_user')]}">
+                    <tree>
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </field>
+            <field name="is_manager_approver" position="after">
+                <field name="approval_hierarchy" attrs="{'invisible': [('approval_by','!=','only_user')]}" readonly="1"/>
+                <field name="approval_by" />
+                <field name="product_id" attrs="{'invisible': [('approval_by','!=','user_and_so_type')], 'required': [('approval_by','=','user_and_so_type')]}"/>
+                <field name="product_uom_id" attrs="{'invisible': [('approval_by','!=','user_and_so_type')], 'required': [('approval_by','=','user_and_so_type')]}"/>
+                <field name="min_boxes" attrs="{'invisible': [('approval_by','!=','user_and_so_type')]}"/>
+                <field name="max_boxes" attrs="{'invisible': [('approval_by','!=','user_and_so_type')]}"/>
+            </field>
+            <field name="user_ids" position="after">
+                <field name="approval_department_user_ids" attrs="{'invisible': [('approval_by','!=','user_and_department')]}">
+                    <tree>
+                        <field name="department_id" />
+                        <field name="approval_sequence_user_ids" widget="many2many_tags" default_order="sequence desc"/>
+                        <field name="approval_hierarchy" invisible="1"/>
+                    </tree>
+                </field>
+            </field>
+            <field name="user_ids" position="after">
+                <field name="approval_so_type_user_ids" attrs="{'invisible': [('approval_by','!=','user_and_so_type')]}">
+                    <tree>
+                        <field name="so_type_id" />
+                        <field name="proposer_user_ids" widget="many2many_tags"/>
+                        <field name="boxes_conditions" />
+                        <!--<field name="boxes_qty" />-->
+                        <field name="approval_sequence_user_ids" widget="many2many_tags" default_order="sequence desc"/>
+                        <field name="approval_hierarchy" invisible="1"/>
+                    </tree>
+                </field>
+            </field>
+            <field name="approval_minimum" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('approval_hierarchy','=',True),('approval_by', '=', "user_and_department")]}</attribute>
+            </field>
+        </field>
+    </record>
+    
+    <record id="approval_department_user_view_form" model="ir.ui.view">
+        <field name="name">approval.department.user.view.form</field>
+        <field name="model">approval.department.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="approval_hierarchy" readonly="1" invisible="1"/>
+                        <field name="approval_minimum" attrs="{'invisible': [('approval_hierarchy','=',True)]}"/>
+                        <field name="department_id" />
+                        <!--<field name="user_ids">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>-->
+                        <field name="approval_sequence_user_ids">
+                            <tree editable="top" default_order="sequence">
+                                <field name="sequence" readonly="0" string="No."/>
+                                <field name="user_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="approval_so_type_user_view_form" model="ir.ui.view">
+        <field name="name">approval.so.type.user.view.form</field>
+        <field name="model">approval.so.type.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="approval_hierarchy" readonly="1" invisible="1"/>
+                        <field name="approval_minimum" attrs="{'invisible': [('approval_hierarchy','=',True)]}"/>
+                        <field name="so_type_id" required="1"/>
+                        <field name="boxes_conditions" />
+                        <!--<field name="boxes_qty" />-->
+                        <field name="proposer_user_ids">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                        <field name="approval_sequence_user_ids">
+                            <tree editable="top" default_order="sequence">
+                                <field name="sequence" widget="handle"/>
+                                <field name="user_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+</odoo>

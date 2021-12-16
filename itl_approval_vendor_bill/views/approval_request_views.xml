@@ -1,0 +1,78 @@
+
+<odoo>
+    
+    <record id="approval_request_view_form_inherit_bill" model="ir.ui.view">
+        <field name="name">approval.request.view.form.bill</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="amount" position="after">
+                <field name="category_code" readonly="1" invisible="1"/>
+                <!--
+                <field name="bill_id" attrs="{'invisible': [('category_code','!=','PAYMENT')]}" readonly="1"/>
+                <field name="bill_partner_id" attrs="{'invisible': [('category_code','!=','PAYMENT')]}" readonly="1"/>
+                <field name="company_id" groups="base.group_no_one" readonly="1" invisible="1"/>-->
+                <field name="bill_id" invisible="1"/>
+                <field name="is_first_approver" invisible="1"/>
+            </field>
+            
+            <xpath expr="//form/sheet/notebook/page[1]" position="before">
+                <page string="General info" name="general_info" attrs="{'invisible': [('category_code','!=','PAYMENT')]}">
+                    <group>
+                        <group string="Purchase info" name="purchase_info">
+                            <field name="payment_purchase_id" readonly="1"/>
+                            <field name="payment_purchase_partner_id" invisible="0"/>
+                            <field name="payment_purchase_currency_id" readonly="1"/>
+                            <field name="payment_purchase_amount_total" widget="monetary" options="{'currency_field': 'payment_purchase_currency_id'}" readonly="1"/>
+                        </group>
+                        <group string="Bill info" name="bill_info">
+                            <field name="bill_ids" nolabel="1" domain="[('partner_id','=',payment_purchase_partner_id),('state','in',['draft','posted']),('type', '=', 'in_invoice'),('itl_purchase_related','=',False),('invoice_payment_state','=','not_paid')]" attrs="{'readonly': [('is_first_approver','=',False)]}">
+                                <tree class="tree_no_open">
+                                    <field name="name"/>
+                                    <field name="invoice_date"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                    <field name="invoice_payment_state"/>
+                                    <!--
+                                    <field name="approval_request_vendor_bill_id"/>
+                                    <field name="approval_vendor_bill_status"/>
+                                    -->
+                                    <button type="object" name="unlink_bill" string="Unlink" icon="fa-chain-broken" confirm="Si desliga una factura tendrá que solicitar nuevamente aprobación para volverla a ligar. ¿Continuar?"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </page>
+                <page string="Old payment request" name="old_payment_request" attrs="{'invisible': [('bill_id','=',False)]}">
+                    <group>
+                        <group>
+                            <field name="bill_id"/>
+                            <label for="bill_id"/>
+                            <div class="o_row">
+                                <field name="bill_id" readonly="0" domain="[('state','in',['draft','posted']),('partner_id','=',payment_purchase_partner_id),('type', '=', 'in_invoice'),('itl_purchase_related','=',False),('invoice_payment_state','=','not_paid')]" 
+                                   options="{'no_create': True, 'no_create_edit':True}"/>
+                                <button name="link_bill" string="Link bill" class="oe_link" type="object" attrs="{'invisible': [('bill_id','=',False)]}"/>
+                                <button name="unlink_bill" string="Unlink bill" class="oe_link" type="object" attrs="{'invisible': [('bill_id','=',False)]}"/>
+                            </div>
+                            <field name="bill_currency_id" readonly="1"/>
+                            <field name="bill_amount_total" widget="monetary" options="{'currency_field': 'bill_currency_id'}" readonly="1"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="itl_urgent_payment" attrs="{'invisible': [('category_code','!=','PAYMENT')]}"/>
+                <field name="itl_payment_date" attrs="{'invisible': ['|',('itl_urgent_payment','=',False),('category_code','!=','PAYMENT')], 'required': [('itl_urgent_payment','=',True)]}"/>
+                <field name="itl_urgency_reason" attrs="{'invisible': ['|',('itl_urgent_payment','=',False),('category_code','!=','PAYMENT')], 'required': [('itl_urgent_payment','=',True)]}"/>
+            </field>
+            <xpath expr="//sheet" position="before">
+               <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                    attrs="{'invisible': ['|',('itl_urgent_payment','=',False),('category_code','!=','PAYMENT')]}">
+                   <strong>This is a urgent payment request.</strong>
+               </div>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record model="ir.module.category" id="module_management_entrega_so">
+             <field name="name">Entrega SO</field>
+             <field name="description">Acceso a módulo de Entrega SO</field>
+             <field name="sequence">20</field>
+        </record>
+        
+        <record id="entrega_so_user" model="res.groups">
+            <field name="name">Usuario</field>
+            <field name="category_id" ref="module_management_entrega_so"/>
+        </record>
+        
+    </data>
+</odoo>

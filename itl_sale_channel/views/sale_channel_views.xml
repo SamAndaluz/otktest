@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+    <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="itl_sale_channel.list">
+          <field name="name">itl_sale_channel list</field>
+          <field name="model">sale.channel</field>
+          <field name="arch" type="xml">
+            <tree editable="top">
+              <field name="name"/>
+              <field name="analytic_account_id"/>
+              <field name="price_list_id"/>
+            </tree>
+          </field>
+        </record>
+
+    <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="itl_sale_channel">
+          <field name="name">Sale Channel</field>
+          <field name="res_model">sale.channel</field>
+          <field name="view_mode">tree</field>
+        </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="itl_sale_channel.action_server">
+      <field name="name">itl_sale_channel server</field>
+      <field name="model_id" ref="model_itl_sale_channel_itl_sale_channel"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+        <menuitem
+            id="soc_menu"
+            parent="sale.menu_sales_config"
+            action="itl_sale_channel"
+            sequence="20"
+        />
+    </data>
+</odoo>

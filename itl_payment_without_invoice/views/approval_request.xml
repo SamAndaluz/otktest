@@ -1,0 +1,22 @@
+
+<odoo>
+    
+    <record id="itl_approval_request_view_form_doc_type" model="ir.ui.view">
+        <field name="name">itl.approval.request.view.form.doc.type</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='general_info']" position="inside">
+                <field name="is_first_approver" invisible="1"/>
+                <group string="Payment control without invoice">
+                    <group>
+                        <field name="itl_document_type" attrs="{'readonly': [('is_first_approver','=',False)]}"/>
+                        <field name="itl_pediment" attrs="{'invisible': [('itl_document_type','!=','pediment')], 'required': [('itl_document_type','=','pediment')], 'readonly': [('is_first_approver','=',False)]}" placeholder="15  48  3009  0001234"/>
+                        <field name="itl_foreing_invoice" attrs="{'invisible': [('itl_document_type','!=','foreing_invoice')], 'required': [('itl_document_type','=','foreing_invoice')], 'readonly': [('is_first_approver','=',False)]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

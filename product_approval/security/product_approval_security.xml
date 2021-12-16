@@ -1,0 +1,10 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_approval_product" model="res.groups">
+            <field name="name">Approval products</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="view_employee_form_custom" model="ir.ui.view">
+            <field name="name">hr.employee.form.custom</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[1]" position="inside">
+                    <page name="assets" string="Assets">
+                        <field name="asset_ids" readonly="1"/>
+                        <!--<field name="asset_ids">
+                            <tree create="false" delete="false" editable="false">
+                                <field name="name"/>
+                                <field name="original_value"/>
+                                <field name="acquisition_date"/>
+                            </tree>
+                        </field>-->
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

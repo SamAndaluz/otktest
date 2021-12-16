@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_custom" model="ir.ui.view">
+            <field name="name">view_partner_form.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <group name="sale" position="inside">
+                    <field name="sale_channel_id"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

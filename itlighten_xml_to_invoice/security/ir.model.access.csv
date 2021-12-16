@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+user_legacy_invoice_product,user_legacy_invoice_product,model_legacy_invoice_product,base.group_user,1,1,1,1
+res_company_xml_import_line,res_company_xml_import_line,model_res_company_xml_import_line,base.group_user,1,1,1,1
+user_product_words,user_product_words,model_product_words,base.group_user,1,1,1,1

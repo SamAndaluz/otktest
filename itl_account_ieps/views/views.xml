@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        
+        <record model="ir.ui.view" id="view_account_tax_form_inherit">
+            <field name="name">view_account_tax_form_inherit</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type_tax_use']" position='after'>
+                    <field name="itl_include_in_tax" />
+                    <field name="itl_taxes" attrs="{'invisible': [('itl_include_in_tax','=',False)]}" widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//field[@name='active']" position='after'>
+                    <field name="itl_hide_in" />
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="itl_view_account_move_form_custom" model="ir.ui.view">
+            <field name="name">itl.account.move.custom.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="ref" position="after">
+                    <field name="itl_iesp_special" invisible="1"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

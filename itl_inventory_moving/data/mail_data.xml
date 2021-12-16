@@ -1,0 +1,864 @@
+<data noupdate="0">
+    
+    <record id="email_template_receiving_transfer_picking" model="mail.template">
+        <field name="name">ITL Receiving Transfer: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">La recepción ${object.name} está lista para ser validada</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_dest_contact_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${object.itl_dest_contact_id.name},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con la recepción adecuada del siguiente producto:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de transferencia: </strong>${ctx.get('new_picking')}<br/>
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    <strong>Compañía logistica: </strong>${object.itl_logistic_company_id.name}<br/>
+                    <strong>Nombre del conductor: </strong>${object.itl_driver_name}<br/>
+                    <strong>Tipo de vehículo: </strong>${object.itl_type_of_car}<br/>
+                    <strong>Placas del vehículo: </strong>${object.itl_plate_of_car}<br/>
+                    <br/>
+                    Favor de confirmar la entrega de producto en su almacén a través del siguiente link:
+                    <br/><br/>
+                    <a href="${ctx.get('base_url')}">Ir al movimiento de inventario</a>
+                    <br/><br/>
+                    Muchas gracias de antemano, no duden de hacernos saber cualquier duda o comentario.
+                    <br/><br/>
+                    Saludos
+                    <br/>
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_receiving_return_picking" model="mail.template">
+        <field name="name">ITL Receiving Return: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">La devolución ${object.name} está lista para ser validada</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_origin_contact_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${object.itl_origin_contact_id.name},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con el recibo adecuado de la siguiente devolución de producto:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    <strong>Compañía logistica: </strong>${object.itl_logistic_company_id.name}<br/>
+                    <strong>Nombre del conductor: </strong>${object.itl_driver_name}<br/>
+                    <strong>Tipo de vehículo: </strong>${object.itl_type_of_car}<br/>
+                    <strong>Placas del vehículo: </strong>${object.itl_plate_of_car}<br/>
+                    <br/>
+                    Favor de confirmar la entrega de producto en su almacén a través del siguiente link, también solicitamos su apoyo con una foto donde se observe la calidad del producto devuelto.
+                    <br/><br/>
+                    <a href="${ctx.get('base_url')}">Ir al movimiento de inventario</a>
+                    <br/><br/>
+                    Muchas gracias de antemano, no duden de hacernos saber cualquier duda o comentario.
+                    <br/><br/>
+                    Saludos
+                    <br/>
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_shipping_transfer_picking" model="mail.template">
+        <field name="name">ITL Shipping Transfer: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Preparación de recolección ${object.name}</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_source_contact_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${object.itl_source_contact_id.name},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con la siguiente preparación de producto para recolección:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    <strong>Compañía logistica: </strong>${object.itl_logistic_company_id.name}<br/>
+                    <strong>Nombre del conductor: </strong>${object.itl_driver_name}<br/>
+                    <strong>Tipo de vehículo: </strong>${object.itl_type_of_car}<br/>
+                    <strong>Placas del vehículo: </strong>${object.itl_plate_of_car}<br/>
+                    <br/>
+                    Favor de confirmar la salida de inventario a través del siguiente link:
+                    <br/><br/>
+                    <a href="${object.get_base_url()}">Ir al movimiento de inventario</a>
+                    <br/><br/>
+                    Muchas gracias de antemano, no duden de hacernos saber cualquier duda o comentario.
+                    <br/><br/>
+                    Saludos
+                    <br/>
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_shipping_sale_picking" model="mail.template">
+        <field name="name">ITL Shipping Sale Picking: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Preparación de recolección ${object.name}</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_origin_contact_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${object.itl_origin_contact_id.name},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con la siguiente preparación de producto para recolección:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de venta: </strong>${object.origin}<br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    % if (object.itl_pickup_date):
+                        <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    % endif
+                    % if (object.itl_delivery_by not in ['collected_employee']):
+                        % if (object.itl_delivery_by in ['logistic_company']):
+                            <strong>Compañía logistica: </strong>${object.itl_logistic_company_id.name}<br/>
+                            <strong>Nombre del conductor: </strong>${object.itl_driver_name}<br/>
+                        % endif
+                        % if (object.itl_delivery_by in ['employee']):
+                            <strong>Empleado OMX: </strong>${object.itl_employee_partner_id.name}<br/>
+                        % endif
+                        <strong>Tipo de vehículo: </strong>${object.itl_type_of_car}<br/>
+                        <strong>Placas del vehículo: </strong>${object.itl_plate_of_car}<br/>
+                    % endif
+                    <br/>
+                    Favor de confirmar la salida de inventario a través del siguiente link:
+                    <br/><br/>
+                    <a href="${object.get_base_url()}">Ir al movimiento de inventario</a>
+                    <br/><br/>
+                    Muchas gracias de antemano, no duden de hacernos saber cualquier duda o comentario.
+                    <br/><br/>
+                    Saludos
+                    <br/>
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_shipping_logistic_company" model="mail.template">
+        <field name="name">ITL Shipping Logistic Company: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Servicio de distribución Otsuka ${object.name}</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_logistic_company_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado proveedor,
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con el siguiente servicio de distribución:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    <br/>
+                    <!-- Warehouse -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Almacén de origen: </strong>${object.itl_location_warehouse_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Almacén de origen: </strong>${object.itl_warehouse_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <!-- Address -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Dirección de origen: </strong>${object.itl_address_warehouse_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Dirección de origen: </strong>${object.itl_address_origin_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Dirección de origen: </strong>${object.partner_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    <!-- -->
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    <!-- Contact -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Contacto de origen: </strong>${object.itl_origin_contact_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Contacto de origen: </strong>${object.itl_source_contact_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <br/>
+                    
+                    <!-- Warehouse -->
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Almacén de destino: </strong>${object.itl_warehouse_dest_id.name}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Almacén de destino: </strong>${object.itl_location_warehouse_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <!-- Address -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Dirección de destino: </strong>${object.partner_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Dirección de destino: </strong>${object.itl_address_dest_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Dirección de destino: </strong>${object.itl_address_warehouse_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    <!-- -->
+                    <strong>Fecha de entrega: </strong>${object.get_fecha_entrega_datetime()}<br/>
+                    <!-- Contact -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Contacto de destino: </strong>${object.partner_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Contacto de destino: </strong>${object.itl_dest_contact_id.name}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Contacto de destino: </strong>${object.itl_origin_contact_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <br/>
+                    Muchas gracias de antemano, no duden en hacernos saber cualquier duda o comentario.<br/>
+                    <br/>
+                    Saludos
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_shipping_employee" model="mail.template">
+        <field name="name">ITL Shipping Employee: Send by email</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Entrega de producto ${object.name}</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="partner_to">${object.itl_employee_partner_id.id}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${object.itl_employee_partner_id.name},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos contamos con su apoyo por favor con la entrega del producto siguiente:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.move_line_ids_without_package:
+                        <tr>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (object.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (object.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    <br/>
+                    <!-- Warehouse -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Almacén de origen: </strong>${object.itl_location_warehouse_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Almacén de origen: </strong>${object.itl_warehouse_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <!-- Address -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Dirección de origen: </strong>${object.itl_address_warehouse_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Dirección de origen: </strong>${object.itl_address_origin_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Dirección de origen: </strong>${object.partner_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    <!-- -->
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    <!-- Contact -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Contacto de origen: </strong>${object.itl_origin_contact_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Contacto de origen: </strong>${object.itl_source_contact_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <br/>
+                    <!-- Warehouse -->
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Almacén de destino: </strong>${object.itl_warehouse_dest_id.name}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Almacén de destino: </strong>${object.itl_location_warehouse_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <!-- Address -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Dirección de destino: </strong>${object.partner_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Dirección de destino: </strong>${object.itl_address_dest_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Dirección de destino: </strong>${object.itl_address_warehouse_id.with_context(without_company=True).contact_address}<br/>
+                    % endif
+                    <!-- -->
+                    <strong>Fecha de entrega: </strong>${object.get_fecha_entrega_datetime()}<br/>
+                    <!-- Contact -->
+                    % if (object.picking_type_code == 'outgoing'):
+                       <strong>Contacto de destino: </strong>${object.partner_id.name}<br/>
+                    % endif
+                    % if (object.picking_type_code == 'internal'):
+                        <strong>Contacto de destino: </strong>${object.itl_dest_contact_id.name}<br/>
+                    % endif
+                    % if (object.itl_is_return):
+                       <strong>Contacto de destino: </strong>${object.itl_source_contact_id.name}<br/>
+                    % endif
+                    <!-- -->
+                    <br/>
+                    <strong>Favor de compartirnos acuse de recibo para toda entrega.</strong><br/>
+                    Muchas gracias de antemano, no duden en hacernos saber cualquier duda o comentario.<br/>
+                    <br/>
+                    Saludos
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <!--  -->
+    <record id="email_template_multiple_shipping_sale_picking" model="mail.template">
+        <field name="name">ITL Multiple Delivery Orders</field>
+        <field name="model_id" ref="itl_inventory_moving.model_itl_prepare_picking"/>
+        <field name="subject">Preparación de recolección</field>
+        <field name="email_from">${(object.create_uid.email_formatted or create_uid.email_formatted) | safe}</field>
+        <field name="partner_to">${ctx.get('partner_to_id')}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${ctx.get('partner_to_name')},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con la siguiente preparación de producto para recolección en el almacén <strong>${ctx.get('warehouse_name')}</strong>:
+                    <br/><br/>
+                    <table style="width: 50%;">
+                        <tr>
+                            <td>
+                                <strong>Oden de venta</strong>
+                            </td>
+                            <td>
+                                <strong>Oden de salida</strong>
+                            </td>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                        </tr>
+                        % for line in object.itl_stock_move_line_id:
+                        <tr>
+                            <td >
+                                ${line.picking_id.origin}
+                            </td>
+                            <td >
+                                ${line.picking_id.name}
+                            </td>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                ${line.product_uom_qty}
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <!--
+                    <strong>Orden de venta: </strong>${object.origin}<br/>
+                    <strong>Orden de transferencia: </strong>${object.name}<br/>
+                    -->
+                    <strong>Fecha de recolección: </strong>${object.get_fecha_recoleccion_datetime()}<br/>
+                    % if (object.itl_delivery_by not in ['collected_employee']):
+                        % if (object.itl_delivery_by in ['logistic_company']):
+                            <strong>Compañía logistica: </strong>${object.itl_logistic_company_id.name}<br/>
+                            <strong>Nombre del conductor: </strong>${object.itl_driver_name}<br/>
+                        % endif
+                        % if (object.itl_delivery_by in ['employee']):
+                            <strong>Empleado OMX: </strong>${object.itl_employee_partner_id.name}<br/>
+                        % endif
+                        <strong>Tipo de vehículo: </strong>${object.itl_type_of_car}<br/>
+                        <strong>Placas del vehículo: </strong>${object.itl_plate_of_car}<br/>
+                    % endif
+                    <br/>
+                    Favor de confirmar la salida de inventario.
+                    <br/><br/>
+                    <!--
+                    <a href="${ctx.get('base_url')}">Ir al movimiento de inventario</a>
+                    <br/><br/>
+                    -->
+                    Muchas gracias de antemano, no duden de hacernos saber cualquier duda o comentario.
+                    <br/><br/>
+                    Saludos
+                    <br/>
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_multiple_shipping_logistic" model="mail.template">
+        <field name="name">ITL Multiple Delivery Orders Logistic</field>
+        <field name="model_id" ref="itl_inventory_moving.model_itl_prepare_picking"/>
+        <field name="subject">Servicio de distribución Otsuka</field>
+        <field name="email_from">${(object.create_uid.email_formatted or create_uid.email_formatted) | safe}</field>
+        <field name="partner_to">${ctx.get('partner_to_id')}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado proveedor,
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos solicitamos de su apoyo por favor con el siguiente servicio de distribución:
+                    <br/><br/>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <strong>Oden de venta</strong>
+                            </td>
+                            <td>
+                                <strong>Oden de salida</strong>
+                            </td>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                            <td>
+                                <strong>Almacén de origen</strong>
+                            </td>
+                            <td>
+                                <strong>Dirección de origen</strong>
+                            </td>
+                            <td>
+                                <strong>Dirección de destino</strong>
+                            </td>
+                        </tr>
+                        % for line in object.itl_stock_move_line_id:
+                        <tr style="border-bottom-width: 1px solid #000;">
+                            <td >
+                                ${line.picking_id.origin}
+                            </td>
+                            <td >
+                                ${line.picking_id.name}
+                            </td>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (line.picking_id.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (line.picking_id.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.itl_location_warehouse_id.name}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_warehouse_id.name}
+                                % endif
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.itl_address_warehouse_id.with_context(without_company=True).contact_address}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_address_origin_id.with_context(without_company=True).contact_address}
+                                % endif
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.partner_id.with_context(without_company=True).contact_address}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_address_dest_id.with_context(without_company=True).contact_address}
+                                % endif
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <!-- -->
+                    <br/>
+                    Muchas gracias de antemano, no duden en hacernos saber cualquier duda o comentario.<br/>
+                    <br/>
+                    Saludos
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+    <record id="email_template_multiple_shipping_employee" model="mail.template">
+        <field name="name">ITL Multiple Delivery Orders Employee</field>
+        <field name="model_id" ref="itl_inventory_moving.model_itl_prepare_picking"/>
+        <field name="subject">Entrega de producto</field>
+        <field name="email_from">${(object.create_uid.email_formatted or create_uid.email_formatted) | safe}</field>
+        <field name="partner_to">${ctx.get('partner_to_id')}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Buen día estimado ${ctx.get('partner_to_name')},
+                    <br/><br/>
+                    Espero estén teniendo un excelente día. Sin más preámbulos contamos con su apoyo por favor con la entrega del producto siguiente:
+                    <br/><br/>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <strong>Oden de venta</strong>
+                            </td>
+                            <td>
+                                <strong>Oden de salida</strong>
+                            </td>
+                            <td>
+                                <strong>Producto</strong>
+                            </td>
+                            <td>
+                                <strong>Cantidad</strong>
+                            </td>
+                            <td>
+                                <strong>Unidad</strong>
+                            </td>
+                            <td>
+                                <strong>Lote</strong>
+                            </td>
+                            <td>
+                                <strong>Almacén de origen</strong>
+                            </td>
+                            <td>
+                                <strong>Dirección de origen</strong>
+                            </td>
+                            <td>
+                                <strong>Dirección de destino</strong>
+                            </td>
+                        </tr>
+                        % for line in object.itl_stock_move_line_id:
+                        <tr style="border-bottom-width: 1px solid #000;">
+                            <td >
+                                ${line.picking_id.origin}
+                            </td>
+                            <td >
+                                ${line.picking_id.name}
+                            </td>
+                            <td >
+                                ${line.product_id.name}
+                            </td>
+                            <td >
+                                % if (line.picking_id.picking_type_code in ['internal','incoming']):
+                                    ${line.qty_done}
+                                % endif
+                                % if (line.picking_id.picking_type_code in ['outgoing']):
+                                    ${line.product_uom_qty}
+                                % endif
+                            </td>
+                            <td>
+                                ${line.product_uom_id.name}
+                            </td>
+                            <td>
+                                ${line.lot_id.name}
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.itl_location_warehouse_id.name}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_warehouse_id.name}
+                                % endif
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.itl_address_warehouse_id.with_context(without_company=True).contact_address}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_address_origin_id.with_context(without_company=True).contact_address}
+                                % endif
+                            </td>
+                            <td>
+                                % if (line.picking_id.picking_type_code == 'outgoing'):
+                                   ${line.picking_id.partner_id.with_context(without_company=True).contact_address}
+                                % endif
+                                % if (line.picking_id.picking_type_code == 'internal'):
+                                    ${line.picking_id.itl_address_dest_id.with_context(without_company=True).contact_address}
+                                % endif
+                            </td>
+                        </tr>
+                        %endfor
+                    </table>
+                    <br/>
+                    <!-- -->
+                    <br/>
+                    Muchas gracias de antemano, no duden en hacernos saber cualquier duda o comentario.<br/>
+                    <br/>
+                    Saludos
+                </p>
+            </div>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="False"/>
+    </record>
+    
+</data>

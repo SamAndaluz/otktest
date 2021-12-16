@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+    <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="purchase_order_form_inherit">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Related bills" >
+                        <group>
+                            <field name="invoice_ids" nolabel="1">
+                                <tree class="tree_no_open">
+                                    <field name="name"/>
+                                    <field name="invoice_date"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                    <field name="invoice_payment_state"/>
+                                    <field name="approval_request_vendor_bill_id"/>
+                                    <field name="approval_vendor_bill_status"/>
+                                    <button type="object" name="unlink_bill" string="Unlink" icon="fa-chain-broken" confirm="Si desliga una factura tendrá que solicitar nuevamente aprobación para volverla a ligar. ¿Continuar?"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="itl_invoice_purchase_relation.action_window">
+      <field name="name">itl_invoice_purchase_relation window</field>
+      <field name="res_model">itl_invoice_purchase_relation.itl_invoice_purchase_relation</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="itl_invoice_purchase_relation.action_server">
+      <field name="name">itl_invoice_purchase_relation server</field>
+      <field name="model_id" ref="model_itl_invoice_purchase_relation_itl_invoice_purchase_relation"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="itl_invoice_purchase_relation" id="itl_invoice_purchase_relation.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="itl_invoice_purchase_relation.menu_1" parent="itl_invoice_purchase_relation.menu_root"/>
+    <menuitem name="Menu 2" id="itl_invoice_purchase_relation.menu_2" parent="itl_invoice_purchase_relation.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="itl_invoice_purchase_relation.menu_1_list" parent="itl_invoice_purchase_relation.menu_1"
+              action="itl_invoice_purchase_relation.action_window"/>
+    <menuitem name="Server to list" id="itl_invoice_purchase_relation" parent="itl_invoice_purchase_relation.menu_2"
+              action="itl_invoice_purchase_relation.action_server"/>
+-->
+  </data>
+</odoo>

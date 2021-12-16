@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>	
+
+        <record id="payment_request_form_purchase" model="ir.ui.view">
+            <field name="name">payment.request form</field>
+            <field name="model">itl.payment.request</field>
+            <field name="arch" type="xml">
+                <form string="Payment request">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="itl_urgent_payment"/>
+                                <field name="itl_payment_date" attrs="{'invisible': [('itl_urgent_payment','=',False)], 'required': [('itl_urgent_payment','=',True)]}"/>
+                                <field name="itl_urgency_reason" attrs="{'invisible': [('itl_urgent_payment','=',False)], 'required': [('itl_urgent_payment','=',True)]}"/>
+                            </group>
+                            <group></group>
+                        </group>
+                        
+                    </sheet>
+                    <footer>
+                        <button string="Send request" class="btn-primary" type="object" name="send_request"/>
+                    </footer>
+                </form>
+            </field>	
+        </record>
+
+    </data>
+</odoo>

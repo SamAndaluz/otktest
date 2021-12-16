@@ -1,0 +1,21 @@
+<odoo>
+  <data>
+      
+      <record model="ir.ui.view" id="account_account_form_itl_user_type_id">
+            <field name="name">account.account.form.itl_user_type_id</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_revaluation" position="after">
+                    <field name="user_subtype_id" string="Subtipo"/>
+                    <field name="itl_user_subtype_id" string="ID Subtipo" readonly="1"/>                   
+                </field>
+                
+                <field name="user_type_id" position="after">
+                    <field name="itl_user_type_id" string="ID Tipo"  readonly="1"/>                   
+                </field>
+            </field>
+        </record>
+      
+  </data>
+</odoo>

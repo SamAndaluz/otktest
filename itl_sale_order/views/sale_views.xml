@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        
+        <record id="view_sale_order_form_custom_approval" model="ir.ui.view">
+            <field name="name">sale.order.custom.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                    <field name="itl_product_sale_ok" invisible="1"/>
+                    <field name="itl_product_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('itl_product_sale_ok','=',True),('itl_product_type','=','product'),'|',('qty_invoiced', '&gt;', 0)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

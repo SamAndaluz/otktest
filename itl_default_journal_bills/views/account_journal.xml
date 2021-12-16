@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--<record id="account_journal_form" model="ir.ui.view">
+            <field name="name">hr.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='type']"
+                       position="after">
+                    <field name="subtype"></field>
+                </xpath>
+
+            </field>
+        </record>-->
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="journal_2_id" invisible="1"
+                                       groups="account.group_account_user"
+                                       options="{'no_create': True}"
+                                       domain="[('type', '=?', invoice_filter_type_domain)]"
+                                       attrs="{'readonly': [('name', '!=', '/')]}"/>
+                </xpath>
+
+            </field>
+        </record>
+        
+    </data>
+</openerp>

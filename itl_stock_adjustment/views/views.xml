@@ -1,0 +1,207 @@
+<odoo>
+  <data>
+    <!-- adding action server -->
+    <record model="ir.actions.server" id="action_email_warehouse_owners">
+      <field name="name">Warehouse owner report</field>
+      <field name="model_id" ref="stock.model_stock_inventory"/>
+      <field name="state">email</field>
+      <field name="template_id" ref="stock_adjust_mail_template"/>
+    </record>
+    <record model="ir.actions.server" id="action_start_inventory">
+      <field name="name">Start Inventory Action</field>
+      <field name="model_id" ref="stock.model_stock_inventory"/>
+      <field name="state">code</field>
+      <field name="code">record.action_start()</field>
+    </record>
+    <!--This launch email action to the users and also add the default
+    functionality on start inventory button-->
+    <record model="ir.actions.server" id="action_chain_email_start_inventory">
+      <field name="name">Override start inventory and send report warehouse emails</field>
+      <field name="model_id" ref="stock.model_stock_inventory"/>
+      <field name="state">multi</field>
+      <field name="child_ids" eval="[(4, ref('action_email_warehouse_owners')), (4, ref('action_start_inventory'))]" />
+    </record>
+    <!-- explicit form view definition -->
+    <record id="view_stock_inventory_form_inherit" model="ir.ui.view">
+      <field name="name">stock.inventory.form</field>
+      <field name="model">stock.inventory</field>
+      <field name="inherit_id" ref="stock.view_inventory_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//button[@name='action_start']" position="attributes">
+            <attribute name="name">%(action_chain_email_start_inventory)d</attribute>
+            <attribute name="type">action</attribute>
+          </xpath>
+          <xpath expr="//button[@name='action_open_inventory_lines']" position="attributes">
+            <attribute name="groups">stock.group_stock_user,itl_stock_adjustment.group_warehouse_owners</attribute>
+          </xpath>
+          <xpath expr="//button[@name='action_cancel_draft'][1]" position="attributes">
+            <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+          </xpath>
+          <xpath expr="//button[@name='action_cancel_draft'][2]" position="attributes">
+            <attribute name="groups">stock.group_stock_user,stock.group_stock_manager</attribute>
+          </xpath>
+          <xpath expr="//field[@name='state']" position="before">
+            <button name="add_locations" string="Add locations" class="oe_stat_button" type="object" states="draft"/>
+            <button name="clear_locations" string="Clear locations" class="btn-danger" type="object" states="draft"/>
+          </xpath>
+          <xpath expr="/form/sheet/group/group[1]/field" position="before">
+              <field name="selected_internal_locations"/>
+              <field name="selected_transit_locations"/>
+          </xpath>
+          <xpath expr="/form/sheet/group/group[2]/field" position="before">
+              <field name="can_validate" invisible="1"/>
+              <field name="bypass_exception" widget="boolean_toggle"/>
+              <field name="filling_inventory_deadline"/>
+          </xpath>
+          <xpath expr="/form/sheet/group" position="after">
+               <field name="filling_report_ids" readonly="1" groups="stock.group_stock_manager">
+                  <tree>
+                      <field name="warehouse_id"/>
+                      <field name="updated"/>
+                  </tree>
+               </field>
+          </xpath>
+      </field>
+    </record>
+
+    <record id="stock_inventory_line_tree2_inherit" model="ir.ui.view">
+      <field name="name">stock.inventory.line.tree2</field>
+      <field name="model">stock.inventory.line</field>
+      <field name="inherit_id" ref="stock.stock_inventory_line_tree2"/>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='product_qty']" position="attributes">
+            <attribute name="attrs">
+                {'readonly': ['|', ('state', '!=', 'confirm'), ('was_filled', '=', True)]}
+            </attribute>
+            <attribute name="force_save">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='product_qty']" position="after">
+            <field name="damaged_product_qty"/>
+            <field name="was_filled"/>
+            <field name="stored_difference_qty" invisible="1"/>
+          </xpath>
+      </field>
+    </record>
+    <!-- updating view for warehouse owners-->
+    <record id="view_inventory_tree_inherit" model="ir.ui.view">
+        <field name="name">stock.inventory.tree</field>
+        <field name="model">stock.inventory</field>
+        <field name="arch" type="xml">
+            <tree string="Lot/Serial Number Inventory" decoration-muted="state == 'cancel'" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
+                <field name="product_ids" widget="many2many_tags" optional="hide"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="has_warehouse_lines" invisible="1"/>
+                <field name="has_confirmed" invisible="1"/>
+                <button name="action_open_inventory_lines" string="Fill report" class="oe_highlight" type="object"
+                    attrs="{'invisible': [
+                     '|', '&amp;', ('has_confirmed', '=', True), ('has_warehouse_lines', '=', True),
+                     ('has_warehouse_lines', '=', False)]}"/>
+                <field name="completed" class="text-success"
+                       attrs="{'invisible': [
+                        '&amp;', ('has_confirmed', '=', False), ('has_warehouse_lines', '=', True)]}"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_inventory_line_custom_tree" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="arch" type="xml">
+            <tree create="true" edit="true" delete="false"
+                  default_order="location_id,product_id" editable="top" string="Inventory Details"
+                  decoration-danger="product_qty != theoretical_qty"
+                  decoration-muted="product_qty == theoretical_qty"
+                  decoration-bf="is_editable">
+                <field name="company_id" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <field name="is_editable" invisible="1"/>
+                <field name="outdated" invisible="1"/>
+                <field name="product_id" options="{'no_create': True}" width="1.6"
+                       readonly="context.get('default_product_id', False)"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"
+                       options="{'no_create': True}"
+                       invisible="context.get('readonly_location_id', False)"
+                       readonly="context.get('readonly_location_id', False)"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="inventory_date" optional="hide" width="0.8"/>
+                <field name="tracking" readonly="True" invisible="1"/>
+                <field name="prod_lot_id" groups="stock.group_production_lot" width="0.8"
+                       attrs="{'readonly': ['|', '|',
+                            ('product_tracking', '=', 'none'),
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')],
+                            'required': [('tracking', '=', 'lot')]}"
+                       context="{'default_product_id': product_id, 'default_company_id': company_id}" optional="show"/>
+                <field name="package_id" groups="stock.group_tracking_lot" width="0.8"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"
+                       string="Package" optional="show"/>
+                <field name="partner_id" groups="stock.group_tracking_owner"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="theoretical_qty" string="On Hand" width="0.5"
+                       force_save="1" readonly="1" optional="show"/>
+                <button name="action_refresh_quantity" string="Refresh quantity" title="Refresh quantity"
+                        icon="fa-refresh" type="object"
+                        attrs="{'invisible': [('outdated', '=', False)]}"/>
+                <field name="product_qty" attrs="{'readonly': [('state', '!=', 'confirm')]}"
+                       width="0.5" string="Counted"/>
+                <field name="damaged_product_qty"/>
+                <field name="was_filled"/>
+                <field name="difference_qty" optional="show" width="0.5"/>
+                <field name="product_uom_id" string="UoM" groups="uom.group_uom"
+                       width="0.3" force_save="1"/>
+                <field name="inventory_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_inventory_line_pivot" model="ir.ui.view">
+        <field name="name">stock.inventory.line.pivot</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="arch" type="xml">
+            <pivot disable_linking="True">
+                <field name="product_id" type="row"/>
+                <field name="prod_lot_id" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="product_qty" type="measure"/>
+                <field name="damaged_product_qty" type="measure"/>
+                <field name="theoretical_qty" type="measure"/>
+                <field name="stored_difference_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="action_inventory_form_inherit" model="ir.actions.act_window">
+      <field name="name">Inventory Adjustments (owners)</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">stock.inventory</field>
+      <field name="view_mode">tree</field>
+      <field name="view_id" ref="view_inventory_tree_inherit"/>
+      <field name="search_view_id" ref="stock.view_inventory_filter"/>
+      <field name="domain">[('state', '=', 'confirm')]</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          Create a new inventory adjustment
+        </p><p>
+          This is used to correct the product quantities you have in stock.
+        </p>
+      </field>
+    </record>
+
+    <record model="ir.ui.menu" id="stock.menu_stock_root">
+      <field name="groups_id" eval="[(4, ref('group_warehouse_owners'), False)]"/>
+    </record>
+
+    <menuitem name="Inventory Adjustments (owners)" action="action_inventory_form_inherit" id="menu_action_inventory_form_warehouse_owners" parent="stock.menu_stock_warehouse_mgmt" groups="group_warehouse_owners" sequence="31"/>
+  </data>
+</odoo>

@@ -1,0 +1,35 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_extended
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-20 05:41+0000\n"
+"PO-Revision-Date: 2020-02-19 23:46-0600\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
+"Last-Translator: \n"
+"Language: es_MX\n"
+
+#. module: partner_extended
+#: model:ir.model,name:partner_extended.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: partner_extended
+#: model:ir.model.fields,field_description:partner_extended.field_res_partner__is_customer
+#: model:ir.model.fields,field_description:partner_extended.field_res_users__is_customer
+msgid "Is customer"
+msgstr "Es cliente"
+
+#. module: partner_extended
+#: model:ir.model.fields,field_description:partner_extended.field_res_partner__is_vendor
+#: model:ir.model.fields,field_description:partner_extended.field_res_users__is_vendor
+msgid "Is vendor"
+msgstr "Es proveedor"

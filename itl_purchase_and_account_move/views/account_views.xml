@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+    
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_origin" position="after">
+                    <field name="received_products" readonly="1" attrs="{'invisible': [('type','!=','in_invoice')]}" groups="base.group_no_one"/>
+                </field>
+                <button name="action_invoice_register_payment" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|', '|', '|', ('received_products','=',False),('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}
+                    </attribute>
+                </button>
+                <button name="action_invoice_register_payment" position="after">
+                    <button name="action_invoice_register_payment" id="account_invoice_payment_btn"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', '|', '|', ('received_products','!=',False),('state', '!=', 'posted'), ('invoice_payment_state', '!=', 'not_paid'), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"
+                                string="Register Special Payment"
+                                groups="itl_purchase_and_account_move.group_show_payment_invoice_button"/>
+                </button>
+                <sheet position="before">
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|','|',('received_products','!=',False),('type','!=','in_invoice'),('invoice_payment_state','=','paid')]}">
+                        <p><strong>Esta factura no se puede pagar porque no se ha recibido el Consumible o el Servicio de la PO relacionada.</strong></p>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': ['|','|',('received_products','=',False),('type','!=','in_invoice'),('invoice_payment_state','=','paid')]}">
+                        <p><strong>Los productos fueron recibidos, esta factura está liberada para pago.</strong></p>
+                    </div>
+                </sheet>
+                <!--
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="attributes">
+                    <attribute name="attrs">{'readonly': True}</attribute>
+                </xpath>-->
+                
+            </field>
+        </record>
+
+    </data>
+</odoo>

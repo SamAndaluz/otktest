@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        
+        <record id="view_order_form_custom" model="ir.ui.view">
+            <field name="name">sale.order.form.custom</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="approval_request" invisible="1"/>
+                    <field name="is_approver" invisible="1"/>
+                    <field name="is_manager" invisible="1"/>
+                </field>
+                <xpath expr="//form//header//button[@name='action_confirm']" position="replace">
+                    <button name="send_to_approve"
+                        string="Send to approve" type="object"
+                        attrs="{'invisible': ['|',('state', 'in', ['to_approve','sale','done','cancel']),('approval_request','!=',True)]}"
+                        />
+                </xpath>
+                <xpath expr="//form//header//button[@name='action_confirm'][last()]" position="replace">
+                    <!--<button name="action_confirm" id="action_confirm"
+                        string="Confirm" class="btn-primary" type="object"
+                        attrs="{'invisible': ['|',('state', 'not in', ['sent','draft','to_approve']),('approval_request','=',True),('is_approver','=',False)]}"
+                        groups="itl_sale_order_approval.group_approval_so"/>-->
+                    <button name="action_confirm" id="action_confirm"
+                        string="Confirm" class="btn-primary" type="object"
+                        attrs="{'invisible': ['|','&amp;','&amp;',('approval_request','=',True),('is_approver','=',False),('is_manager','=',False),('state', 'in', ['sale','done','cancel'])]}"
+                        />
+                </xpath>
+                <!--<xpath expr="//form//header//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,sent,sale" attrs="{'invisible': [('approval_request','=',True)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale" attrs="{'invisible': [('approval_request','!=',True)]}"/>
+                    
+                </xpath>-->
+            </field>
+        </record>
+
+    </data>
+</odoo>
